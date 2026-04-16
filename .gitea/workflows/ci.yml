@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    services:
+      postgres:
+        image: pgvector/pgvector:pg18
+        env:
+          POSTGRES_USER: tavrik
+          POSTGRES_PASSWORD: tavrik
+          POSTGRES_DB: tavrik_test
+        options: >-
+          --health-cmd "pg_isready -U tavrik"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      DATABASE_URL: postgres://tavrik:tavrik@postgres:5432/tavrik_test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm types-check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+  docker:
+    needs: ci
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Install Docker CLI and git
+        run: apk add --no-cache docker-cli git
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build app image
+        run: docker build -f docker/Dockerfile -t tavrik:smoke .
+
+      - name: Verify image
+        run: |
+          docker run --rm tavrik:smoke sh -c "
+            echo '--- Tavrik image ---' &&
+            node -v &&
+            ls dist/server/entry.mjs &&
+            echo '--- All OK ---'
+          "

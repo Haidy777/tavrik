@@ -1,3 +1,9 @@
+# Local dev data
+.local/
+
+# Astro generated types
+.astro/
+
 # ---> Node
 # Logs
 logs

@@ -1,0 +1,35 @@
+{
+  "name": "tavrik",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev:ui": "pnpm --filter @tavrik/ui dev",
+    "build": "pnpm -r build",
+    "build:ui": "pnpm --filter @tavrik/ui build",
+    "preview:ui": "pnpm --filter @tavrik/ui preview",
+    "lint": "biome check",
+    "lint:fix": "biome check . --write",
+    "test": "vitest run",
+    "test:watch": "pnpm run vitest",
+    "types-check": "tsc --pretty --noEmit",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:status": "changeset status",
+    "dev:db": "docker compose -f docker/compose.dev.yml up -d",
+    "dev:db:down": "docker compose -f docker/compose.dev.yml down",
+    "db:codegen": "pnpm --filter @tavrik/lib db:codegen",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.12",
+    "@changesets/cli": "2.30.0",
+    "@types/pg": "^8.20.0",
+    "husky": "9.1.7",
+    "vitest": "4.1.4"
+  }
+}

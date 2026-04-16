@@ -1,0 +1,21 @@
+{
+  "name": "@tavrik/ui",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/node": "10.0.4",
+    "@tavrik/lib": "workspace:*",
+    "astro": "6.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.8",
+    "typescript": "catalog:"
+  }
+}

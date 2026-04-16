@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "rangeStrategy": "pin",
+  "schedule": ["before 6am"],
+  "postUpgradeTasks": {
+    "commands": ["pnpm install --lockfile-only"],
+    "executionMode": "update"
+  }
+}

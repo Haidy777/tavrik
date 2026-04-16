@@ -1,0 +1,24 @@
+{
+  "name": "@tavrik/lib",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "exports": {
+    ".": "./index.ts",
+    "./database": "./database/index.ts",
+    "./logger": "./logger.ts"
+  },
+  "scripts": {
+    "db:codegen": "DATABASE_URL=postgres://tavrik:tavrik@localhost:5432/tavrik kysely-codegen"
+  },
+  "dependencies": {
+    "kysely": "catalog:",
+    "pg": "catalog:",
+    "pino": "catalog:",
+    "pino-pretty": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "kysely-codegen": "0.20.0"
+  }
+}
