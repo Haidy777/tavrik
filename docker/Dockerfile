@@ -1,4 +1,4 @@
-FROM node:24-alpine AS deps
+FROM node:24.15.0-alpine AS deps
 
 WORKDIR /app
 RUN corepack enable
@@ -7,7 +7,7 @@ COPY src/ui/package.json src/ui/package.json
 COPY src/lib/package.json src/lib/package.json
 RUN pnpm install --frozen-lockfile --prod
 
-FROM node:24-alpine AS build
+FROM node:24.15.0-alpine AS build
 
 WORKDIR /app
 RUN corepack enable
@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
-FROM node:24-alpine AS runtime
+FROM node:24.15.0-alpine AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production
