@@ -5,7 +5,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY src/ui/package.json src/ui/package.json
 COPY src/lib/package.json src/lib/package.json
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 FROM node:24.15.0-alpine AS build
 
