@@ -9,10 +9,13 @@
     "./logger": "./logger.ts"
   },
   "scripts": {
-    "db:codegen": "DATABASE_URL=postgres://tavrik:tavrik@localhost:5432/tavrik kysely-codegen"
+    "db:codegen": "pnpm run db:migrate && kysely-codegen",
+    "db:migrate": "tsx ./database/migrate-manual.ts",
+    "db:migrate:down": "tsx ./database/migrate-down-manual.ts"
   },
   "dependencies": {
     "kysely": "catalog:",
+    "openai": "^6.34.0",
     "pg": "catalog:",
     "pino": "catalog:",
     "pino-pretty": "catalog:"

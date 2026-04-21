@@ -23,6 +23,7 @@ Add dark mode toggle to the settings page
   - `minor` — new features, non-breaking changes
   - `major` — breaking changes
 - The summary should be concise (1-2 sentences), written from the user's perspective
+- After the summary, add an **AI assistance** section that lists what Claude specifically helped with in the current conversation (e.g. architecture decisions, type fixes, config setup, debugging). Be specific — mention tools, patterns, and techniques, not just "helped with code". Format: `**AI assistance (Claude Code, <model>):** <details>`
 - Always append a blank line followed by `_Changeset created with help from Claude_` at the end of the body
 - If `$ARGUMENTS` is provided, use it as guidance for the summary
 

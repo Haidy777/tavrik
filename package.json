@@ -5,7 +5,7 @@
   "license": "AGPL-3.0-or-later",
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=24"
+    "node": "24.15.0"
   },
   "scripts": {
     "dev:ui": "pnpm --filter @tavrik/ui dev",
@@ -15,22 +15,29 @@
     "lint": "biome check",
     "lint:fix": "biome check . --write",
     "test": "vitest run",
-    "test:watch": "pnpm run vitest",
+    "test:unit": "vitest run --project unit",
+    "test:database": "vitest run --project database",
+    "test:watch": "vitest",
     "types-check": "tsc --pretty --noEmit",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:status": "changeset status",
-    "dev:db": "docker compose -f docker/compose.dev.yml up -d",
+    "dev:db": "docker compose -f docker/compose.dev.yml up -d --wait && pnpm run db:codegen",
     "dev:db:down": "docker compose -f docker/compose.dev.yml down",
     "db:codegen": "pnpm --filter @tavrik/lib db:codegen",
+    "db:regen": "pnpm run dev:db && pnpm run test:database && pnpm --filter @tavrik/lib db:migrate:down && pnpm run dev:db:down",
     "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
     "@changesets/cli": "2.30.0",
-    "@types/pg": "^8.20.0",
+    "@types/pg": "8.20.0",
     "husky": "9.1.7",
+    "tsx": "4.21.0",
     "typescript": "catalog:",
     "vitest": "4.1.4"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

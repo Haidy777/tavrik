@@ -10,9 +10,9 @@
     "check": "astro check"
   },
   "dependencies": {
-    "@astrojs/node": "10.0.4",
+    "@astrojs/node": "10.0.5",
     "@tavrik/lib": "workspace:*",
-    "astro": "6.1.6"
+    "astro": "6.1.8"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.8",

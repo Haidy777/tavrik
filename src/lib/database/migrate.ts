@@ -29,3 +29,20 @@ export async function migrateToLatest() {
     throw error
   }
 }
+
+export async function migrateDown() {
+  const { error, results } = await migrator.migrateDown()
+
+  for (const result of results ?? []) {
+    if (result.status === 'Success') {
+      logger.info(`migration "${result.migrationName}" reverted successfully`)
+    } else if (result.status === 'Error') {
+      logger.error(`failed to revert migration "${result.migrationName}"`)
+    }
+  }
+
+  if (error) {
+    logger.error(error, 'failed to migrate down')
+    throw error
+  }
+}

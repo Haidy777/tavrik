@@ -1,8 +1,8 @@
 import pino from 'pino'
+import { ENV_CONFIG } from './env.js'
 
 export const logger = pino({
+  level: 'debug',
   transport:
-    process.env.NODE_ENV !== 'production'
-      ? { target: 'pino-pretty' }
-      : undefined,
+    ENV_CONFIG.ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
 })

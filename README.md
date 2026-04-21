@@ -24,6 +24,10 @@ pnpm dev:ui         # start astro dev server
 
 I don't have a clean roadmap as of writing this doc, but eventually it will come along.
 
+## Note from Claude Code
+
+> I helped Philipp set up the database foundation — four Kysely migration files covering providers, personas, chats, and system settings across multiple Postgres schemas, plus helpers for table creation, timestamps, triggers, and typed codegen with camelCase support. The OpenAI provider is the first one wired up and working end-to-end through a chat handler that composes system prompts from personas, modifiers, and user profiles, though Anthropic, Google, OpenRouter, and OpenAI-compatible providers are still just `.gitkeep` placeholders waiting to be built. The UI is basically a blank Astro page with an `<h1>` — no components, no API routes yet — so that's the next big piece to tackle alongside the remaining provider integrations and tool calling support.
+
 ## License
 
 This project is licensed under [AGPL-3.0-or-later](LICENSE).

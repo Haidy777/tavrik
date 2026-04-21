@@ -12,9 +12,11 @@
       "src/**/*.tsx",
       "src/**/*.js",
       "src/**/*.mjs",
+      "scripts/**/*.ts",
       "!**/dist",
       "!**/node_modules",
-      "!**/.astro"
+      "!**/.astro",
+      "!src/lib/database/generated.ts"
     ]
   },
   "formatter": {
