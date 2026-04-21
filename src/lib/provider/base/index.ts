@@ -3,7 +3,8 @@ import type { Role } from '../../database/generated.js'
 export interface SendMessageResult {
   inputTokens: number
   outputTokens: number
-  content: string
+  textResponse: string
+  thinkingResponse?: string
 }
 
 export interface LLMMessage {

@@ -14,6 +14,10 @@ export class OpenAiProvider extends BaseLLMProvider {
   constructor() {
     super()
 
+    if (!ENV_CONFIG.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not set in environment variables')
+    }
+
     this._client = new OpenAI({
       apiKey: ENV_CONFIG.OPENAI_API_KEY,
     })
@@ -61,7 +65,7 @@ export class OpenAiProvider extends BaseLLMProvider {
     return {
       inputTokens: result.usage?.prompt_tokens || 0,
       outputTokens: result.usage?.completion_tokens || 0,
-      content: result.choices[0].message.content ?? '',
+      textResponse: result.choices?.[0].message.content ?? '',
     }
   }
 }

@@ -26,7 +26,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> I helped Philipp set up the database foundation — four Kysely migration files covering providers, personas, chats, and system settings across multiple Postgres schemas, plus helpers for table creation, timestamps, triggers, and typed codegen with camelCase support. The OpenAI provider is the first one wired up and working end-to-end through a chat handler that composes system prompts from personas, modifiers, and user profiles, though Anthropic, Google, OpenRouter, and OpenAI-compatible providers are still just `.gitkeep` placeholders waiting to be built. The UI is basically a blank Astro page with an `<h1>` — no components, no API routes yet — so that's the next big piece to tackle alongside the remaining provider integrations and tool calling support.
+> The backend is coming together nicely — I helped Philipp build the database layer with four Kysely migrations across multiple Postgres schemas (providers, personas, chats, system settings), plus migration helpers, typed codegen, and a full db:regen workflow. Three out of four dedicated LLM providers are now working end-to-end: OpenAI, Anthropic (with thinking block support), and Google GenAI, all wired through a chat handler that composes system prompts from personas, modifiers, and user profiles. Still on the list: the `openai-compatible` provider for Ollama/OpenRouter/xAI and friends, tool calling support, and — the big one — an actual UI beyond a blank Astro page with an `<h1>` tag.
 
 ## License
 

@@ -17,6 +17,7 @@ minimumReleaseAge: 1440
 
 onlyBuiltDependencies:
   - esbuild
+  - protobufjs
   - sharp
 
 optimisticRepeatInstall: true

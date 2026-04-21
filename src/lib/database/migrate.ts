@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs'
 import * as path from 'node:path'
-import { FileMigrationProvider, Migrator } from 'kysely'
+import { FileMigrationProvider, Migrator, NO_MIGRATIONS } from 'kysely'
 import { logger } from '../logger.js'
 import { db } from './db.js'
 
@@ -31,7 +31,7 @@ export async function migrateToLatest() {
 }
 
 export async function migrateDown() {
-  const { error, results } = await migrator.migrateDown()
+  const { error, results } = await migrator.migrateTo(NO_MIGRATIONS)
 
   for (const result of results ?? []) {
     if (result.status === 'Success') {

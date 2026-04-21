@@ -37,7 +37,7 @@ export type Language = "de" | "en";
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
-export type ProviderModelCapabilities = "embedding" | "text" | "tts";
+export type ProviderModelCapabilities = "embedding" | "text" | "tools" | "tts" | "vision";
 
 export type ProviderProviderType = "anthropic" | "google" | "openai" | "openai-compatible" | "openrouter";
 
@@ -46,23 +46,56 @@ export type Role = "assistant" | "user";
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface ChatsConversations {
+  /**
+   * Soft archive flag for hiding old conversations
+   */
   archived: Generated<boolean>;
+  /**
+   * LLM model used for chat responses
+   */
   chatModelId: Int8;
   createdAt: Generated<Timestamp>;
+  /**
+   * Ephemeral conversations are not loaded to memory
+   */
   ephemeral: Generated<boolean>;
   id: Generated<Int8>;
+  /**
+   * Active persona for system prompt
+   */
   personaId: Int8 | null;
+  /**
+   * Optional modifier applied to persona system prompt
+   */
   personaModifierId: Int8 | null;
+  /**
+   * Auto-generated summary of conversation history
+   */
   rollingSummary: string | null;
+  /**
+   * Timestamp of last rolling summary generation
+   */
   rollingSummaryCreatedAt: Generated<Timestamp>;
+  /**
+   * Whether automatic rolling summaries are active
+   */
   rollingSummaryEnabled: Generated<boolean>;
+  /**
+   * Model used for generating rolling summaries
+   */
   rollingSummaryModelId: Int8 | null;
   title: string;
   updatedAt: Generated<Timestamp>;
+  /**
+   * User profile providing context to the LLM
+   */
   userProfileId: Int8 | null;
 }
 
 export interface ChatsMessages {
+  /**
+   * File attachments (images, etc.)
+   */
   attachments: Json | null;
   content: string;
   conversationId: Int8;
@@ -72,9 +105,18 @@ export interface ChatsMessages {
   outputTokens: Generated<number>;
   role: Role;
   source: ChatsMessageSource;
+  /**
+   * JSON array of tool calls made by the assistant
+   */
   toolCalls: Json | null;
+  /**
+   * Generated column: input_tokens + output_tokens
+   */
   totalTokens: Generated<number | null>;
   updatedAt: Generated<Timestamp>;
+  /**
+   * Metadata for voice/TTS messages
+   */
   voiceInfo: Json | null;
 }
 

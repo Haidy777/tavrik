@@ -162,13 +162,13 @@ export async function handleChatMessage(
       .insertInto('chats.messages')
       .values({
         conversationId,
-        content: response.content,
+        content: response.textResponse,
         role: 'assistant',
         source,
       })
       .execute()
 
-    return response.content
+    return response.textResponse
   } catch (err) {
     console.log(err)
   }

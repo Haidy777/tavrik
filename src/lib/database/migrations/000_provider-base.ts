@@ -1,6 +1,7 @@
 import { type Kysely, sql } from 'kysely'
 import {
   ANTHROPIC_MODELS,
+  GOOGLE_MODELS,
   type IModelInfo,
   OPEN_AI_MODELS,
 } from '../../consts/provider-models.js'
@@ -68,7 +69,7 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
   await db.schema
     .withSchema('provider')
     .createType('model_capabilities')
-    .asEnum(['text', 'tts', 'tools', 'embedding'])
+    .asEnum(['text', 'tts', 'tools', 'embedding', 'vision'])
     .execute()
 
   await addComment(
@@ -150,19 +151,22 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
 
   await createModels(db, anthropic.id, ANTHROPIC_MODELS)
 
+  const google = await db
+    .insertInto('provider.providers')
+    .values({
+      type: 'google',
+      name: 'Google GenAI',
+    })
+    .returning('id')
+    .executeTakeFirstOrThrow()
+
+  await createModels(db, google.id, GOOGLE_MODELS)
+
   await db
     .insertInto('provider.providers')
     .values({
       type: 'openrouter',
       name: 'OpenRouter',
-    })
-    .executeTakeFirstOrThrow()
-
-  await db
-    .insertInto('provider.providers')
-    .values({
-      type: 'google',
-      name: 'Google GenAI',
     })
     .executeTakeFirstOrThrow()
 }
