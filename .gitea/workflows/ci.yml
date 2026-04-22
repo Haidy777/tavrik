@@ -156,7 +156,7 @@ jobs:
 
           # Commit, tag, and push
           git add package.json pnpm-lock.yaml .changeset/ **/package.json **/CHANGELOG.md
-          git commit -m "chore: release v${VERSION} [skip ci]"
+          git commit --no-verify -m "chore: release v${VERSION} [skip ci]"
           git tag "v${VERSION}"
           git push origin main --follow-tags
         env:
