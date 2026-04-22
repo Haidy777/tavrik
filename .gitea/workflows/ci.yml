@@ -79,3 +79,85 @@ jobs:
             ls dist/server/entry.mjs &&
             echo '--- All OK ---'
           "
+
+  consume-changesets:
+    needs: ci
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Install git
+        run: apk add --no-cache git || (apt-get update && apt-get install -y git) || true
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check for pending changesets
+        id: check
+        run: |
+          COUNT=$(find .changeset -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Found $COUNT pending changeset(s)"
+
+      - name: Setup Node.js
+        if: steps.check.outputs.count != '0'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+
+      - name: Enable corepack
+        if: steps.check.outputs.count != '0'
+        run: corepack enable
+
+      - name: Install dependencies
+        if: steps.check.outputs.count != '0'
+        run: pnpm install --frozen-lockfile
+
+      - name: Consume changesets and release
+        if: steps.check.outputs.count != '0'
+        run: |
+          # Determine highest bump type from pending changesets (only check YAML frontmatter)
+          BUMP="patch"
+          for f in .changeset/*.md; do
+            [ "$(basename "$f")" = "README.md" ] && continue
+            FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$f")
+            if echo "$FRONTMATTER" | grep -q "major"; then
+              BUMP="major"
+              break
+            elif echo "$FRONTMATTER" | grep -q "minor"; then
+              BUMP="minor"
+            fi
+          done
+          echo "Highest bump type: $BUMP"
+
+          # Consume changesets (bumps workspace package versions, updates CHANGELOGs)
+          pnpm changeset version
+
+          # Bump root package.json version
+          npm version "$BUMP" --no-git-tag-version
+
+          # Re-run install so lockfile matches bumped versions
+          pnpm install --no-frozen-lockfile
+
+          # Get new version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "New root version: v${VERSION}"
+
+          # Configure git
+          git config user.name "Gitea Actions"
+          git config user.email "actions@git.phaidenbauer.com"
+
+          # Set up push credentials
+          git remote set-url origin "https://phaidenbauer:${PUSH_TOKEN}@git.phaidenbauer.com/phaidenbauer/tavrik_clean.git"
+
+          # Commit, tag, and push
+          git add package.json pnpm-lock.yaml .changeset/ **/package.json **/CHANGELOG.md
+          git commit -m "chore: release v${VERSION} [skip ci]"
+          git tag "v${VERSION}"
+          git push origin main --follow-tags
+        env:
+          PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
