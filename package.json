@@ -22,8 +22,9 @@
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:status": "changeset status",
-    "dev:db": "docker compose -f docker/compose.dev.yml up -d --wait && pnpm run db:codegen",
+    "dev:db": "docker compose -f docker/compose.dev.yml up -d --wait postgres && pnpm run db:codegen",
     "dev:db:down": "docker compose -f docker/compose.dev.yml down",
+    "dev:telegram": "docker compose -f docker/compose.dev.yml up telegram",
     "db:codegen": "pnpm --filter @tavrik/lib db:codegen",
     "db:regen": "pnpm run dev:db && pnpm run test:database && pnpm --filter @tavrik/lib db:migrate:down && pnpm run dev:db:down",
     "prepare": "husky"
@@ -37,7 +38,5 @@
     "typescript": "catalog:",
     "vitest": "4.1.4"
   },
-  "dependencies": {
-    "dotenv": "^17.4.2"
-  }
+  "dependencies": {}
 }

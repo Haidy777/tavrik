@@ -1,0 +1,15 @@
+FROM node:24.15.0-alpine
+
+WORKDIR /app
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY src/lib/package.json src/lib/package.json
+COPY src/telegram/package.json src/telegram/package.json
+COPY src/ui/package.json src/ui/package.json
+RUN pnpm install --frozen-lockfile
+
+COPY src/lib src/lib
+COPY src/telegram src/telegram
+
+CMD ["pnpm", "tsx", "src/telegram/index.ts"]

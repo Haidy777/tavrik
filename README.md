@@ -20,6 +20,25 @@ pnpm dev:db         # start postgres
 pnpm dev:ui         # start astro dev server
 ```
 
+### Telegram Bot (quickest way to start chatting)
+
+If you just want to talk to Tavrik without building the full UI, the Telegram bot is the fastest path (and the only way currently lol):
+
+1. Create a bot via [@BotFather](https://t.me/BotFather) and grab the token
+2. Get your Telegram user ID (e.g. via [@userinfobot](https://t.me/userinfobot))
+3. Add both to your `.env`:
+   ```
+   TELEGRAM_BOT_TOKEN=your-bot-token
+   TELEGRAM_USER_ID=your-user-id
+   ```
+4. Start everything:
+   ```bash
+   pnpm dev:db          # start postgres (if not already running)
+   pnpm dev:telegram    # build & start the bot in docker
+   ```
+
+The bot runs database migrations on startup, so it's fully self-contained. Only the configured `TELEGRAM_USER_ID` can interact with it.
+
 ## Roadmap
 
 I don't have a clean roadmap as of writing this doc, but eventually it will come along.
@@ -37,7 +56,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> The backend is coming together nicely — I helped Philipp build the database layer with four Kysely migrations across multiple Postgres schemas (providers, personas, chats, system settings), plus migration helpers, typed codegen, and a full db:regen workflow. Three out of four dedicated LLM providers are now working end-to-end: OpenAI, Anthropic (with thinking block support), and Google GenAI, all wired through a chat handler that composes system prompts from personas, modifiers, and user profiles. Still on the list: the `openai-compatible` provider for Ollama/OpenRouter/xAI and friends, tool calling support, and — the big one — an actual UI beyond a blank Astro page with an `<h1>` tag.
+> Tavrik now has its first working interface — a Telegram bot that went from zero to replying in a single session. The database, provider layer (OpenAI, Anthropic with thinking blocks, Google GenAI), and chat handler with persona/modifier/user profile composition were already in place, so wiring up grammy with auth middleware and a Docker dev setup was mostly plumbing. Along the way we caught a few bugs that the previous tsconfig gap was hiding (wrong schema name, snake_case columns vs. camelCase plugin, missing token count persistence), which is a nice reminder that type coverage pays for itself. Next up: the `openai-compatible` provider for Ollama/OpenRouter/xAI, tool calling support, and eventually replacing that lonely `<h1>` tag in the Astro UI with an actual chat interface.
 
 ## License
 

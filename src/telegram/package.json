@@ -1,0 +1,14 @@
+{
+  "name": "@tavrik/telegram",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "@tavrik/lib": "workspace:*",
+    "grammy": "1.42.0",
+    "kysely": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

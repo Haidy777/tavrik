@@ -165,6 +165,8 @@ export async function handleChatMessage(
         content: response.textResponse,
         role: 'assistant',
         source,
+        inputTokens: response.inputTokens,
+        outputTokens: response.outputTokens,
       })
       .execute()
 

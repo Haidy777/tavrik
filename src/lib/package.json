@@ -20,6 +20,7 @@
     "openai": "6.34.0",
     "pg": "catalog:",
     "pino": "catalog:",
+    "dotenv": "17.4.2",
     "pino-pretty": "catalog:"
   },
   "devDependencies": {
