@@ -24,6 +24,17 @@ pnpm dev:ui         # start astro dev server
 
 I don't have a clean roadmap as of writing this doc, but eventually it will come along.
 
+### Ideas floating in my mind
+
+- Claude code like "Memory" System - instead of memory.md -> tool calling and storing to postgres table
+- RAG Tools for past Conversations and Conversation Embedding
+- Dynamic Tool Enabling per Conversation / Persona / User
+- iCal Loading (readonly for starting)
+- Apple Health Data Tool via "Health Export" App
+- tracking of watched tv shows, movies and read books (goodreads?, plex?)
+- spotify listening history?
+- content embedding (example blog posts or diary entries)
+
 ## Note from Claude Code
 
 > The backend is coming together nicely — I helped Philipp build the database layer with four Kysely migrations across multiple Postgres schemas (providers, personas, chats, system settings), plus migration helpers, typed codegen, and a full db:regen workflow. Three out of four dedicated LLM providers are now working end-to-end: OpenAI, Anthropic (with thinking block support), and Google GenAI, all wired through a chat handler that composes system prompts from personas, modifiers, and user profiles. Still on the list: the `openai-compatible` provider for Ollama/OpenRouter/xAI and friends, tool calling support, and — the big one — an actual UI beyond a blank Astro page with an `<h1>` tag.
