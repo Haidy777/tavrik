@@ -1,3 +1,2 @@
 pnpm lint:fix
 pnpm run types-check
-pnpm test

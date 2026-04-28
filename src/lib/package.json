@@ -14,7 +14,7 @@
     "db:migrate:down": "tsx ./database/migrate-down-manual.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.90.0",
+    "@anthropic-ai/sdk": "0.91.1",
     "@google/genai": "1.50.1",
     "kysely": "catalog:",
     "openai": "6.34.0",
