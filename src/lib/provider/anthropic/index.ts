@@ -1,12 +1,14 @@
 import { Anthropic } from '@anthropic-ai/sdk'
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs'
 import { ENV_CONFIG } from '../../env.js'
-import { logger } from '../../logger.js'
+import { moduleLogger } from '../../logger.js'
 import {
   BaseLLMProvider,
   type LLMMessage,
   type SendMessageResult,
 } from '../base/index.js'
+
+const logger = moduleLogger('AnthropicProvider')
 
 export class AnthropicProvider extends BaseLLMProvider {
   private readonly _client: Anthropic
@@ -33,7 +35,6 @@ export class AnthropicProvider extends BaseLLMProvider {
     if (systemPrompt !== '') {
       logger.debug(
         {
-          mod: 'AnthropicProvider',
           func: 'sendMessage',
         },
         `Adding system prompt to conversation`
@@ -42,7 +43,6 @@ export class AnthropicProvider extends BaseLLMProvider {
 
     logger.debug(
       {
-        mod: 'AnthropicProvider',
         func: 'sendMessage',
       },
       `Adding ${messages.length} messages to conversation`
@@ -74,7 +74,6 @@ export class AnthropicProvider extends BaseLLMProvider {
         // todo maybe expand later
         logger.debug(
           {
-            mod: 'AnthropicProvider',
             func: 'sendMessage',
           },
           `Unknown Response Block ${resultBlock.type}`

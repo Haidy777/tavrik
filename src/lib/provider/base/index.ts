@@ -18,4 +18,8 @@ export abstract class BaseLLMProvider {
     systemPrompt: string,
     messages: LLMMessage[]
   ): Promise<SendMessageResult> // todo add tools
+
+  // todo stream message
+
+  // todo list models
 }

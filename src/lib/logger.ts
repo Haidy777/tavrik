@@ -6,3 +6,7 @@ export const logger = pino({
   transport:
     ENV_CONFIG.ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
 })
+
+export const moduleLogger = (mod: string) => {
+  return logger.child({ mod })
+}

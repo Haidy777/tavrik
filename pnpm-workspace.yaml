@@ -16,6 +16,7 @@ engineStrict: true
 minimumReleaseAge: 1440
 
 onlyBuiltDependencies:
+  - '@openrouter/sdk'
   - esbuild
   - protobufjs
   - sharp

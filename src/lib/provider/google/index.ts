@@ -1,11 +1,13 @@
 import { type Content, GoogleGenAI } from '@google/genai'
 import { ENV_CONFIG } from '../../env.js'
-import { logger } from '../../logger.js'
+import { moduleLogger } from '../../logger.js'
 import {
   BaseLLMProvider,
   type LLMMessage,
   type SendMessageResult,
 } from '../base/index.js'
+
+const logger = moduleLogger('GoogleProvider')
 
 export class GoogleProvider extends BaseLLMProvider {
   private readonly _client: GoogleGenAI
@@ -32,7 +34,6 @@ export class GoogleProvider extends BaseLLMProvider {
     if (systemPrompt !== '') {
       logger.debug(
         {
-          mod: 'GoogleProvider',
           func: 'sendMessage',
         },
         `Adding system prompt to conversation`
@@ -41,7 +42,6 @@ export class GoogleProvider extends BaseLLMProvider {
 
     logger.debug(
       {
-        mod: 'GoogleProvider',
         func: 'sendMessage',
       },
       `Adding ${messages.length} messages to conversation`

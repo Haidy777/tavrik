@@ -56,7 +56,13 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Tavrik now has its first working interface — a Telegram bot that went from zero to replying in a single session. The database, provider layer (OpenAI, Anthropic with thinking blocks, Google GenAI), and chat handler with persona/modifier/user profile composition were already in place, so wiring up grammy with auth middleware and a Docker dev setup was mostly plumbing. Along the way we caught a few bugs that the previous tsconfig gap was hiding (wrong schema name, snake_case columns vs. camelCase plugin, missing token count persistence), which is a nice reminder that type coverage pays for itself. Next up: the `openai-compatible` provider for Ollama/OpenRouter/xAI, tool calling support, and eventually replacing that lonely `<h1>` tag in the Astro UI with an actual chat interface.
+> The provider layer just got a lot wider — we built out the `openai-compatible` provider as a shared base that OpenAI now extends (less duplicated code, same behavior), added a dedicated OpenRouter provider using their official SDK, and seeded xAI as the first openai-compatible entry with dynamic API key resolution via environment variables. The logging got a small quality-of-life bump too with `moduleLogger` so each provider carries its own name in log output without repeating it on every call. Philipp's got tool calling and the Astro UI chat interface on the horizon, plus the whole memory/RAG layer from the roadmap — the provider plumbing is solid now, so the interesting bits are next.
+
+## My other Projects
+
+- [cc-tweaked-typescript](https://github.com/Haidy777/cc-tweaked-typescript) - TypeScript-first CC:Tweaked (ComputerCraft) development — type-safe turtle automation, utilities, and scripts compiled to Lua 5.1 via typescript-to-lua. Includes an in-game installer. (Worth checking out if you play Modded Minecraft.)
+- [Personal Blog and CV](https://blog.phaidenbauer.com/)
+- [Haidy777](https://www.youtube.com/@Haidy777) - YouTube channel
 
 ## License
 

@@ -169,6 +169,15 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
       name: 'OpenRouter',
     })
     .executeTakeFirstOrThrow()
+
+  await db
+    .insertInto('provider.providers')
+    .values({
+      type: 'openai-compatible',
+      name: 'xAI',
+      endpoint: 'https://api.x.ai/v1',
+    })
+    .executeTakeFirstOrThrow()
 }
 
 export async function down(db: Kysely<Record<string, never>>): Promise<void> {
