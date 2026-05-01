@@ -3,11 +3,13 @@ import type { AssistantMessage } from '@mistralai/mistralai/models/components/as
 import type { SystemMessage } from '@mistralai/mistralai/models/components/systemmessage'
 import type { ToolMessage } from '@mistralai/mistralai/models/components/toolmessage'
 import type { UserMessage } from '@mistralai/mistralai/models/components/usermessage'
+import type { ProviderModelCapabilities } from '../../database/generated.js'
 import { ENV_CONFIG } from '../../env.js'
 import { moduleLogger } from '../../logger.js'
 import {
   BaseLLMProvider,
   type LLMMessage,
+  type ModelInfo,
   type SendMessageResult,
 } from '../base/index.js'
 
@@ -76,5 +78,94 @@ export class MistralProvider extends BaseLLMProvider {
       outputTokens: result.usage.completionTokens || 0,
       inputTokens: result.usage.promptTokens || 0,
     }
+  }
+
+  async listModels(): Promise<ModelInfo[]> {
+    const models: ModelInfo[] = []
+    const mistralModels = (await this._client.models.list()).data ?? []
+    const seen = new Set<string>() // mistral has duplicate ids, so we need to deduplicate
+
+    for (const model of mistralModels) {
+      if (model.type !== 'base' && model.type !== 'fine-tuned') {
+        // todo might be used later?
+        continue
+      }
+
+      const parsedCapabilities: ProviderModelCapabilities[] = []
+
+      if (seen.has(model.id)) {
+        continue
+      }
+
+      seen.add(model.id)
+
+      if (model.capabilities.completionChat) {
+        parsedCapabilities.push('text')
+      }
+
+      if (model.capabilities.functionCalling) {
+        parsedCapabilities.push('tools')
+      }
+
+      if (model.capabilities.reasoning) {
+        parsedCapabilities.push('thinking')
+      }
+
+      if (model.capabilities.completionFim) {
+        // todo not used yet
+      }
+
+      if (model.capabilities.fineTuning) {
+        // todo not used yet
+      }
+
+      if (model.capabilities.vision) {
+        parsedCapabilities.push('vision')
+      }
+
+      if (model.capabilities.ocr) {
+        // todo not used yet
+      }
+
+      if (model.capabilities.classification) {
+        // todo not used yet
+      }
+
+      if (model.capabilities.moderation) {
+        // todo not used yet
+      }
+
+      if (model.capabilities.audio) {
+        // todo not used yet (? maybe audio input?)
+      }
+
+      if (model.capabilities.audioTranscription) {
+        parsedCapabilities.push('stt')
+      }
+
+      if (model.capabilities.audioTranscriptionRealtime) {
+        // todo not used yet
+        // realtime stt (i guess voice calls?)
+      }
+
+      if (model.capabilities.audioSpeech) {
+        parsedCapabilities.push('tts')
+      }
+
+      logger.debug(
+        { capabilities: model.capabilities },
+        `Found model: ${model.id} ${model.name}`
+      )
+
+      models.push({
+        id: model.id,
+        name: model.name || model.id,
+        capabilities: parsedCapabilities,
+        maxTokens: model.maxContextLength,
+        maxInputTokens: model.maxContextLength, // todo?
+      })
+    }
+
+    return models
   }
 }

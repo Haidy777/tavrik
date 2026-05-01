@@ -1,10 +1,12 @@
 import { Anthropic } from '@anthropic-ai/sdk'
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs'
+import type { ProviderModelCapabilities } from '../../database/generated.js'
 import { ENV_CONFIG } from '../../env.js'
 import { moduleLogger } from '../../logger.js'
 import {
   BaseLLMProvider,
   type LLMMessage,
+  type ModelInfo,
   type SendMessageResult,
 } from '../base/index.js'
 
@@ -87,5 +89,65 @@ export class AnthropicProvider extends BaseLLMProvider {
       textResponse: textResponse,
       thinkingResponse,
     }
+  }
+
+  async listModels(): Promise<ModelInfo[]> {
+    const models: ModelInfo[] = []
+
+    for await (const model of this._client.models.list()) {
+      const parsedCapabilities: ProviderModelCapabilities[] = ['text'] // text input supported by all
+
+      if (model.capabilities?.citations.supported) {
+        // todo not used yet
+        parsedCapabilities.push('citation')
+      }
+
+      if (model.capabilities?.batch.supported) {
+        // todo not used yet
+      }
+
+      if (model.capabilities?.code_execution.supported) {
+        // todo code exectution tools, not used yet
+      }
+
+      if (model.capabilities?.context_management.supported) {
+        // todo not used yet
+      }
+
+      if (model.capabilities?.effort.supported) {
+        // todo not used yet
+      }
+
+      if (model.capabilities?.image_input.supported) {
+        parsedCapabilities.push('vision')
+      }
+
+      if (model.capabilities?.pdf_input.supported) {
+        // todo not used yet
+      }
+
+      if (model.capabilities?.structured_outputs.supported) {
+        // todo not used yet
+      }
+
+      if (model.capabilities?.thinking.supported) {
+        parsedCapabilities.push('thinking')
+      }
+
+      logger.debug(
+        { capabilities: model.capabilities },
+        `Found model: ${model.id} ${model.display_name}`
+      )
+
+      models.push({
+        id: model.id,
+        name: model.display_name,
+        capabilities: parsedCapabilities,
+        maxInputTokens: model.max_input_tokens ?? 0,
+        maxTokens: model.max_tokens ?? 0,
+      })
+    }
+
+    return models
   }
 }

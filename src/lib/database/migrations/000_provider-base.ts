@@ -70,7 +70,16 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
   await db.schema
     .withSchema('provider')
     .createType('model_capabilities')
-    .asEnum(['text', 'tts', 'tools', 'embedding', 'vision'])
+    .asEnum([
+      'text',
+      'tts', // Text to Speech
+      'tools',
+      'embedding',
+      'vision',
+      'citation',
+      'thinking',
+      'stt', // Speech to Text
+    ])
     .execute()
 
   await addComment(
@@ -112,6 +121,10 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
       )
       .addColumn('in_tokens_price', 'numeric')
       .addColumn('out_tokens_price', 'numeric')
+      .addUniqueConstraint('models_provider_id_name_unique', [
+        'provider_id',
+        'name',
+      ])
   )
 
   await addComment(

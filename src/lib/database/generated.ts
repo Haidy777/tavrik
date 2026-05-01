@@ -37,7 +37,7 @@ export type Language = "de" | "en";
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
-export type ProviderModelCapabilities = "embedding" | "text" | "tools" | "tts" | "vision";
+export type ProviderModelCapabilities = "citation" | "embedding" | "stt" | "text" | "thinking" | "tools" | "tts" | "vision";
 
 export type ProviderProviderType = "anthropic" | "google" | "mistral" | "openai" | "openai-compatible" | "openrouter";
 

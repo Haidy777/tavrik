@@ -18,6 +18,48 @@ const hotOpenAiCompatibleProviderRegistry = new Map<
   OpenAICompatibleProvider
 >()
 
+export function getProviderByType<P extends BaseLLMProvider = BaseLLMProvider>(
+  type: ProviderProviderType
+): P | null {
+  if (hotProviderRegistry.has(type)) {
+    return hotProviderRegistry.get(type) as unknown as P
+  }
+
+  if (type === 'openai') {
+    const provider = new OpenAiProvider()
+
+    hotProviderRegistry.set(type, provider)
+
+    return provider as unknown as P
+  } else if (type === 'anthropic') {
+    const provider = new AnthropicProvider()
+
+    hotProviderRegistry.set(type, provider)
+
+    return provider as unknown as P
+  } else if (type === 'google') {
+    const provider = new GoogleProvider()
+
+    hotProviderRegistry.set(type, provider)
+
+    return provider as unknown as P
+  } else if (type === 'openrouter') {
+    const provider = new OpenRouterProvider()
+
+    hotProviderRegistry.set(type, provider)
+
+    return provider as unknown as P
+  } else if (type === 'mistral') {
+    const provider = new MistralProvider()
+
+    hotProviderRegistry.set(type, provider)
+
+    return provider as unknown as P
+  }
+
+  return null
+}
+
 export async function getProvider<P extends BaseLLMProvider = BaseLLMProvider>(
   model: Selectable<ProviderModels>
 ): Promise<P> {
@@ -27,41 +69,13 @@ export async function getProvider<P extends BaseLLMProvider = BaseLLMProvider>(
     .where('id', '=', model.providerId)
     .executeTakeFirstOrThrow()
 
-  if (hotProviderRegistry.has(providerInfo.type)) {
-    return hotProviderRegistry.get(providerInfo.type) as unknown as P
+  const simpleProvider = getProviderByType(providerInfo.type)
+
+  if (simpleProvider) {
+    return simpleProvider as unknown as P
   }
 
-  if (providerInfo.type === 'openai') {
-    const provider = new OpenAiProvider()
-
-    hotProviderRegistry.set(providerInfo.type, provider)
-
-    return provider as unknown as P
-  } else if (providerInfo.type === 'anthropic') {
-    const provider = new AnthropicProvider()
-
-    hotProviderRegistry.set(providerInfo.type, provider)
-
-    return provider as unknown as P
-  } else if (providerInfo.type === 'google') {
-    const provider = new GoogleProvider()
-
-    hotProviderRegistry.set(providerInfo.type, provider)
-
-    return provider as unknown as P
-  } else if (providerInfo.type === 'openrouter') {
-    const provider = new OpenRouterProvider()
-
-    hotProviderRegistry.set(providerInfo.type, provider)
-
-    return provider as unknown as P
-  } else if (providerInfo.type === 'mistral') {
-    const provider = new MistralProvider()
-
-    hotProviderRegistry.set(providerInfo.type, provider)
-
-    return provider as unknown as P
-  } else if (providerInfo.type === 'openai-compatible') {
+  if (providerInfo.type === 'openai-compatible') {
     if (hotOpenAiCompatibleProviderRegistry.has(providerInfo.name)) {
       return hotOpenAiCompatibleProviderRegistry.get(
         providerInfo.name

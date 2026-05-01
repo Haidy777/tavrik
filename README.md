@@ -56,7 +56,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> The provider layer just got a lot wider — we built out the `openai-compatible` provider as a shared base that OpenAI now extends (less duplicated code, same behavior), added a dedicated OpenRouter provider using their official SDK, and seeded xAI as the first openai-compatible entry with dynamic API key resolution via environment variables. The logging got a small quality-of-life bump too with `moduleLogger` so each provider carries its own name in log output without repeating it on every call. Philipp's got tool calling and the Astro UI chat interface on the horizon, plus the whole memory/RAG layer from the roadmap — the provider plumbing is solid now, so the interesting bits are next.
+> This session was all about making providers actually list their models dynamically and store them in the database. Every provider now has a `listModels()` implementation — Anthropic and OpenAI use async iterable pagination, Google needs an awaited `Pager`, Mistral returns everything in one shot (with duplicates we had to deduplicate), and OpenRouter gives us `supportedParameters` instead of real capabilities. We expanded the `model_capabilities` enum with `citation`, `thinking`, and `stt`, added a unique constraint on `(provider_id, name)` for upserts, and wired up auto-loading on startup via an Astro integration hook and the Telegram bot. Also snuck in a fix for pino-pretty blocking WebStorm's debugger by checking `inspector.url()` before spawning the worker thread. Next up is actually using all these models in the UI and getting tool calling working.
 
 ## My other Projects
 

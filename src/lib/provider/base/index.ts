@@ -1,4 +1,7 @@
-import type { Role } from '../../database/generated.js'
+import type {
+  ProviderModelCapabilities,
+  Role,
+} from '../../database/generated.js'
 
 export interface SendMessageResult {
   inputTokens: number
@@ -12,6 +15,14 @@ export interface LLMMessage {
   content: string
 }
 
+export interface ModelInfo {
+  id: string
+  name: string
+  capabilities: ProviderModelCapabilities[]
+  maxInputTokens: number
+  maxTokens: number
+}
+
 export abstract class BaseLLMProvider {
   abstract sendMessage(
     model: string,
@@ -19,6 +30,7 @@ export abstract class BaseLLMProvider {
     messages: LLMMessage[]
   ): Promise<SendMessageResult> // todo add tools
 
+  abstract listModels(): Promise<ModelInfo[]>
   // todo stream message
 
   // todo list models

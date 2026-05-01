@@ -1,4 +1,5 @@
 import { db, logger, migrateToLatest } from '@tavrik/lib'
+import { loadAndStoreAvailableModel } from '@tavrik/lib/provider'
 import { Bot, type Context } from 'grammy'
 import type { Selectable } from 'kysely'
 import {
@@ -44,6 +45,7 @@ async function handleMessage(ctx: Context, _bot: Bot) {
   }
 
   await migrateToLatest()
+  await loadAndStoreAvailableModel()
 
   const bot = new Bot(ENV_CONFIG.TELEGRAM_BOT_TOKEN)
 

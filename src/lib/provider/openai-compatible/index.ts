@@ -1,16 +1,18 @@
 import { OpenAI } from 'openai'
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions/completions'
+import type { ProviderModelCapabilities } from '../../database/generated.js'
 import { moduleLogger } from '../../logger.js'
 import {
   BaseLLMProvider,
   type LLMMessage,
+  type ModelInfo,
   type SendMessageResult,
 } from '../base/index.js'
 
 const logger = moduleLogger('OpenAICompatibleProvider')
 
 export class OpenAICompatibleProvider extends BaseLLMProvider {
-  private readonly _client: OpenAI
+  protected readonly _client: OpenAI
 
   constructor(apiKey?: string, endpoint?: string) {
     super()
@@ -63,5 +65,25 @@ export class OpenAICompatibleProvider extends BaseLLMProvider {
       outputTokens: result.usage?.completion_tokens || 0,
       textResponse: result.choices?.[0].message.content ?? '',
     }
+  }
+
+  async listModels(): Promise<ModelInfo[]> {
+    const models: ModelInfo[] = []
+
+    for await (const model of this._client.models.list()) {
+      const parsedCapabilities: ProviderModelCapabilities[] = []
+
+      logger.debug({ model }, `Found model: ${model.id}`)
+
+      models.push({
+        id: model.id,
+        name: model.id,
+        maxInputTokens: 0,
+        maxTokens: 0,
+        capabilities: parsedCapabilities,
+      })
+    }
+
+    return models
   }
 }
