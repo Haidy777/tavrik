@@ -1,5 +1,15 @@
 # @tavrik/lib
 
+## 0.4.0
+
+### Minor Changes
+
+- bcabf26: Add Mistral as a native LLM provider with API key support, database migration, and provider registry integration
+
+  **AI assistance (Claude Code, claude-opus-4-6):** Created changeset for the Mistral provider addition. Flagged unpinned dependency version (`^2.2.1`) violating project conventions.
+
+  _Changeset created with help from Claude_
+
 ## 0.3.0
 
 ### Minor Changes
