@@ -1,5 +1,12 @@
 # @tavrik/telegram
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [d74dbb8]
+  - @tavrik/lib@0.6.0
+
 ## 0.1.4
 
 ### Patch Changes
