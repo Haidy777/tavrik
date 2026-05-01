@@ -22,6 +22,7 @@ export interface SettingsMap {
   default_persona_id: { id: number } | null
   default_persona_modifier_id: { id: number } | null
   default_user_profile_id: { id: number } | null
+  default_rolling_summary_message_count: { count: number } | null
 }
 
 export type SettingName = keyof SettingsMap

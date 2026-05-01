@@ -8,6 +8,9 @@ export default function dbMigrate(): AstroIntegration {
       'astro:server:start': async () => {
         await migrateToLatest()
       },
+      'astro:build:done': async () => {
+        await migrateToLatest()
+      },
     },
   }
 }

@@ -40,6 +40,7 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
     .values([
       { name: 'default_chat_model_id', value: { id: gpt4o.id } },
       { name: 'default_rolling_summary_model_id', value: { id: gpt4o.id } },
+      { name: 'default_rolling_summary_message_count', value: { count: 20 } },
       { name: 'default_persona_id', value: { id: persona.id } },
       { name: 'default_persona_modifier_id' },
       { name: 'default_user_profile_id', value: { id: profile.id } },

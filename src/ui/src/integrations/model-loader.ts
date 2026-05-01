@@ -8,6 +8,9 @@ export default function modelLoader(): AstroIntegration {
       'astro:server:start': async () => {
         await loadAndStoreAvailableModel()
       },
+      'astro:build:done': async () => {
+        await loadAndStoreAvailableModel()
+      },
     },
   }
 }

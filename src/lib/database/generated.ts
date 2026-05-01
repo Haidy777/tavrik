@@ -181,6 +181,17 @@ export interface SystemSettings {
   value: Generated<Json | null>;
 }
 
+export interface SystemUsageTracking {
+  createdAt: Generated<Timestamp>;
+  functionName: string;
+  id: Generated<Int8>;
+  inTokens: Generated<number>;
+  modelId: Int8;
+  outTokens: Generated<number>;
+  source: ChatsMessageSource;
+  updatedAt: Generated<Timestamp>;
+}
+
 export interface DB {
   "chats.conversations": ChatsConversations;
   "chats.messages": ChatsMessages;
@@ -190,4 +201,5 @@ export interface DB {
   "provider.models": ProviderModels;
   "provider.providers": ProviderProviders;
   "system.settings": SystemSettings;
+  "system.usageTracking": SystemUsageTracking;
 }

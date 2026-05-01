@@ -8,6 +8,7 @@ import { getSetting } from '../database/settings/index.js'
 import { ENV_CONFIG } from '../env.js'
 import { logger } from '../logger.js'
 import { sendMessage } from '../provider/index.js'
+import { autoSummarize } from './auto-summarize.js'
 
 export async function createConversation(
   chatModelId?: string,
@@ -72,10 +73,12 @@ export async function handleChatMessage(
 
   let systemPrompt = ''
 
+  let persona = null
+
   if (conversation.personaId) {
-    const persona = await db
+    persona = await db
       .selectFrom('personas.personas')
-      .select(['name', 'systemPrompt'])
+      .selectAll()
       .where('id', '=', conversation.personaId)
       .executeTakeFirstOrThrow()
 
@@ -105,10 +108,12 @@ export async function handleChatMessage(
     systemPrompt += `\n\n${personaModifier.systemPromptModifier}`
   }
 
+  let userProfile = null
+
   if (conversation.userProfileId) {
-    const userProfile = await db
+    userProfile = await db
       .selectFrom('personas.userProfiles')
-      .select(['name', 'profile'])
+      .selectAll()
       .where('id', '=', conversation.userProfileId)
       .executeTakeFirstOrThrow()
 
@@ -123,14 +128,24 @@ export async function handleChatMessage(
     systemPrompt += `\n\n${userProfile.profile}`
   }
 
-  if (ENV_CONFIG.DEBUG_LOG_FULL_PROMPTS) {
-    logger.debug(
-      {
-        func: 'handleChatMessage',
-        systemPrompt,
-      },
-      'Full system prompt'
-    )
+  // fetch history before inserting the new user message
+  // so autoSummarize doesn't count/include it in the summary
+  const messageHistory = await db
+    .selectFrom('chats.messages')
+    .selectAll()
+    .where('conversationId', '=', conversation.id)
+    .orderBy('id', 'asc')
+    .execute()
+
+  const summaryResult = await autoSummarize(
+    conversation,
+    messageHistory,
+    persona?.language || userProfile?.language || 'en',
+    source
+  )
+
+  if (summaryResult) {
+    systemPrompt += `\n\n${summaryResult.summaryText}`
   }
 
   await db
@@ -143,19 +158,26 @@ export async function handleChatMessage(
     })
     .execute()
 
-  const messageHistory = await db
-    .selectFrom('chats.messages')
-    .selectAll()
-    .where('conversationId', '=', conversation.id)
-    .orderBy('id', 'desc')
-    .limit(20) // todo make configurable later, add automatic rolling summary if enabled
-    .execute()
+  const messagesToSend = [
+    ...(summaryResult ? summaryResult.messagesToSend : messageHistory),
+    { role: 'user' as const, content: message },
+  ]
+
+  if (ENV_CONFIG.DEBUG_LOG_FULL_PROMPTS) {
+    logger.debug(
+      {
+        func: 'handleChatMessage',
+        systemPrompt,
+      },
+      'Full system prompt'
+    )
+  }
 
   try {
     const response = await sendMessage(
       conversation.chatModelId,
       systemPrompt,
-      messageHistory.reverse()
+      messagesToSend
     )
 
     await db
@@ -172,6 +194,6 @@ export async function handleChatMessage(
 
     return response.textResponse
   } catch (err) {
-    console.log(err)
+    logger.error(err)
   }
 }

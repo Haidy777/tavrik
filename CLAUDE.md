@@ -7,10 +7,10 @@ An opinionated chat bot interface with tool calling, model selections, and promp
 - `src/ui/` — Astro frontend (`@tavrik/ui`)
 - `src/lib/` — Shared library (`@tavrik/lib`) — database (Kysely), logger (Pino), provider layer, chat handler
   - `database/` — Kysely setup, migrations, helpers, generated types, overrides
-  - `provider/` — LLM provider abstraction (base, openai, anthropic, google, openrouter, openai-compatible)
-  - `chat-handler/` — Conversation management and system prompt composition
+  - `provider/` — LLM provider abstraction (base, openai, anthropic, google, openrouter, openai-compatible, mistral)
+  - `chat-handler/` — Conversation management, system prompt composition, rolling summaries
   - `consts/` — Provider model definitions and seed data
-- `src/telegram/` — Telegram bot (planned)
+- `src/telegram/` — Telegram bot
 - `docker/` — Dockerfiles and compose configs
 - `scripts/` — Development utility scripts
 

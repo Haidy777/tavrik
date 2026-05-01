@@ -155,7 +155,7 @@ export async function loadAndStoreAvailableModel() {
     const models = await getProviderByType('mistral')?.listModels()
     const mistralProviderInfo = await db
       .selectFrom('provider.providers')
-      .where('type', '=', 'openrouter')
+      .where('type', '=', 'mistral')
       .select('id')
       .executeTakeFirst()
 
