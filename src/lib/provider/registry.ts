@@ -7,6 +7,7 @@ import { db } from '../database/index.js'
 import { AnthropicProvider } from './anthropic/index.js'
 import type { BaseLLMProvider } from './base/index.js'
 import { GoogleProvider } from './google/index.js'
+import { MistralProvider } from './mistral/index.js'
 import { OpenAiProvider } from './openai/index.js'
 import { OpenAICompatibleProvider } from './openai-compatible/index.js'
 import { OpenRouterProvider } from './openrouter/index.js'
@@ -50,6 +51,12 @@ export async function getProvider<P extends BaseLLMProvider = BaseLLMProvider>(
     return provider as unknown as P
   } else if (providerInfo.type === 'openrouter') {
     const provider = new OpenRouterProvider()
+
+    hotProviderRegistry.set(providerInfo.type, provider)
+
+    return provider as unknown as P
+  } else if (providerInfo.type === 'mistral') {
+    const provider = new MistralProvider()
 
     hotProviderRegistry.set(providerInfo.type, provider)
 

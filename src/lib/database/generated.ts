@@ -39,7 +39,7 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type ProviderModelCapabilities = "embedding" | "text" | "tools" | "tts" | "vision";
 
-export type ProviderProviderType = "anthropic" | "google" | "openai" | "openai-compatible" | "openrouter";
+export type ProviderProviderType = "anthropic" | "google" | "mistral" | "openai" | "openai-compatible" | "openrouter";
 
 export type Role = "assistant" | "user";
 

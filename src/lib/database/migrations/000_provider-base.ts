@@ -56,6 +56,7 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
       'openai-compatible',
       'openrouter',
       'google',
+      'mistral',
     ])
     .execute()
 
@@ -176,6 +177,14 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
       type: 'openai-compatible',
       name: 'xAI',
       endpoint: 'https://api.x.ai/v1',
+    })
+    .executeTakeFirstOrThrow()
+
+  await db
+    .insertInto('provider.providers')
+    .values({
+      type: 'mistral',
+      name: 'Mistral',
     })
     .executeTakeFirstOrThrow()
 }
