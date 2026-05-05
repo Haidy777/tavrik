@@ -15,7 +15,7 @@
     "db:migrate:down": "tsx ./database/migrate-down-manual.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.91.1",
+    "@anthropic-ai/sdk": "0.93.0",
     "@google/genai": "1.50.1",
     "@mistralai/mistralai": "^2.2.1",
     "@openrouter/sdk": "0.12.21",
