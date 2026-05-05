@@ -18,7 +18,7 @@
     "@anthropic-ai/sdk": "0.91.1",
     "@google/genai": "1.50.1",
     "@mistralai/mistralai": "^2.2.1",
-    "@openrouter/sdk": "0.12.21",
+    "@openrouter/sdk": "0.12.26",
     "dotenv": "17.4.2",
     "kysely": "catalog:",
     "openai": "6.34.0",
