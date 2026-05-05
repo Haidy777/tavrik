@@ -21,7 +21,7 @@
     "@openrouter/sdk": "0.12.21",
     "dotenv": "17.4.2",
     "kysely": "catalog:",
-    "openai": "6.34.0",
+    "openai": "6.36.0",
     "pg": "catalog:",
     "pino": "catalog:",
     "pino-pretty": "catalog:"
