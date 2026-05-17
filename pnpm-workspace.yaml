@@ -4,7 +4,7 @@ packages:
 blockExoticSubdeps: true
 
 catalog:
-  '@types/node': 24.12.2
+  '@types/node': 24.12.4
   kysely: 0.28.17
   pg: 8.20.0
   pino: 10.3.1
