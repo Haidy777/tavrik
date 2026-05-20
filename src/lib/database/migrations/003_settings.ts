@@ -13,7 +13,7 @@ export async function up(db: Kysely<Record<string, never>>): Promise<void> {
   await addComment(db, 'TABLE', 'system.settings', 'System settings')
 
   // used as a workaround so ts doesn't complain
-  const untypedDb = db as Kysely<Record<string, Record<string, unknown>>>
+  const untypedDb = db as unknown as Kysely<Record<string, Record<string, unknown>>>
 
   const [gpt4o, persona, profile] = await Promise.all([
     untypedDb

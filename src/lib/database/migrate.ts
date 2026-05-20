@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs'
 import * as path from 'node:path'
-import { FileMigrationProvider, Migrator, NO_MIGRATIONS } from 'kysely'
+import { FileMigrationProvider, Migrator, NO_MIGRATIONS } from 'kysely/migration'
 import { logger } from '../logger.js'
 import { db } from './db.js'
 
