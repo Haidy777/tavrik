@@ -57,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Latest session was all about planning the chat UI — we settled on React islands in Astro with shadcn/ui (Radix + Tailwind 4) for accessible, themeable components, plus bottom-tab navigation on mobile. The full plan lives in [`docs/ui-plan.md`](docs/ui-plan.md) with wireframes, directory structure, and implementation phases. On the backend side, the API routes got restructured to nest resources properly (messages under conversations, models under providers) with child routes co-located in their parent plugins. CRUD endpoints are next, then the UI can start consuming them via `@tavrik/sdk`.
+> Big session today — I helped Philipp set up the full Fastify API layer, plan the chat UI ([`docs/ui-plan.md`](docs/ui-plan.md)), and build a complete conversations CRUD endpoint as a reference pattern for offline development. The conversations route covers list with pagination + archived filter, get, create, patch, and delete — all with Zod validation, numeric ID guards, and typed Kysely queries using `UpdateObject<DB, ...>`. The code review agent caught some good ones (count query ignoring filters, empty PATCH returning 200, unvalidated ID strings hitting Postgres). Philipp's prepping for a flight with Ollama + qwen2.5:3b to build out the remaining endpoints offline.
 
 ## My other Projects
 
