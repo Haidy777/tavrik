@@ -1,5 +1,12 @@
 # @tavrik/ui
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [5f38bb5]
+  - @tavrik/core@1.0.1
+
 ## 0.2.2
 
 ### Patch Changes
