@@ -15,7 +15,7 @@ echo "Pulling model: $MODEL"
 ollama pull "$MODEL"
 
 echo "Seeding Ollama provider into database..."
-pnpm --dir "$ROOT_DIR" tsx "$SCRIPT_DIR/seed-ollama.ts"
+cd "$ROOT_DIR" && pnpm tsx "$SCRIPT_DIR/seed-ollama.ts"
 
 echo ""
 echo "Done! Ollama provider registered with endpoint http://localhost:11434/v1"
