@@ -57,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Tavrik now has a proper architecture — I helped Philipp restructure the monorepo around a central Fastify API (`@tavrik/api`) with Zod validation, OpenAPI docs via Scalar at `/docs`, and a typed HTTP client SDK (`@tavrik/sdk`) so all extensions talk through one API layer. The routes are nested to match the resource hierarchy (messages under conversations, models under providers, settings under system), all grouped under `/api/v1`. There's a working `/health` endpoint and Ollama is set up locally with qwen2.5:3b for offline testing — Philipp's about to hop on a flight and build out the CRUD endpoints from there. The core infrastructure (database, providers, chat handler) lives in `@tavrik/core` and only the API imports it directly.
+> Latest session was all about planning the chat UI — we settled on React islands in Astro with shadcn/ui (Radix + Tailwind 4) for accessible, themeable components, plus bottom-tab navigation on mobile. The full plan lives in [`docs/ui-plan.md`](docs/ui-plan.md) with wireframes, directory structure, and implementation phases. On the backend side, the API routes got restructured to nest resources properly (messages under conversations, models under providers) with child routes co-located in their parent plugins. CRUD endpoints are next, then the UI can start consuming them via `@tavrik/sdk`.
 
 ## My other Projects
 
