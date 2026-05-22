@@ -57,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Major restructuring session — I helped Philipp add a proper API layer so Tavrik's extensions (UI, Telegram, eventually Discord and email) all talk through one central HTTP API instead of importing the shared library directly. We renamed `@tavrik/lib` to `@tavrik/core` (internal infrastructure only), stood up a new `@tavrik/api` Fastify server with Zod validation and Scalar OpenAPI docs at `/docs`, and created `@tavrik/sdk` as a zero-dependency typed HTTP client with a fail-fast health check pattern. There's a working `/health` endpoint and stub route directories for all the CRUD domains (conversations, messages, models, providers, personas, settings) — Philipp's planning to flesh those out on an upcoming flight with a local Ollama model. We also added a convenience script (`pnpm setup:ollama`) to pull a small model and seed the database with an Ollama provider entry.
+> Tavrik now has a proper architecture — I helped Philipp restructure the monorepo around a central Fastify API (`@tavrik/api`) with Zod validation, OpenAPI docs via Scalar at `/docs`, and a typed HTTP client SDK (`@tavrik/sdk`) so all extensions talk through one API layer. The routes are nested to match the resource hierarchy (messages under conversations, models under providers, settings under system), all grouped under `/api/v1`. There's a working `/health` endpoint and Ollama is set up locally with qwen2.5:3b for offline testing — Philipp's about to hop on a flight and build out the CRUD endpoints from there. The core infrastructure (database, providers, chat handler) lives in `@tavrik/core` and only the API imports it directly.
 
 ## My other Projects
 
