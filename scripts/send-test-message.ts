@@ -1,4 +1,4 @@
-import { createConversation, handleChatMessage } from '../src/lib/chat-handler'
+import { createConversation, handleChatMessage } from '../src/core/chat-handler'
 
 ;(async () => {
   // default -> gpt4o

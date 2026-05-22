@@ -4,8 +4,10 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY src/ui/package.json src/ui/package.json
-COPY src/lib/package.json src/lib/package.json
+COPY src/core/package.json src/core/package.json
 COPY src/telegram/package.json src/telegram/package.json
+COPY src/api/package.json src/api/package.json
+COPY src/sdk/package.json src/sdk/package.json
 RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 FROM node:24.15.0-alpine AS build
@@ -14,8 +16,10 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY src/ui/package.json src/ui/package.json
-COPY src/lib/package.json src/lib/package.json
+COPY src/core/package.json src/core/package.json
 COPY src/telegram/package.json src/telegram/package.json
+COPY src/api/package.json src/api/package.json
+COPY src/sdk/package.json src/sdk/package.json
 RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build

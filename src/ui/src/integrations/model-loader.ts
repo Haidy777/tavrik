@@ -1,4 +1,4 @@
-import { loadAndStoreAvailableModel } from '@tavrik/lib/provider'
+import { loadAndStoreAvailableModel } from '@tavrik/core/provider'
 import type { AstroIntegration } from 'astro'
 
 export default function modelLoader(): AstroIntegration {

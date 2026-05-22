@@ -1,0 +1,22 @@
+{
+  "name": "@tavrik/api",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "dev": "tsx --watch ./server.ts",
+    "start": "node --import tsx/esm ./server.ts"
+  },
+  "dependencies": {
+    "@tavrik/core": "workspace:*",
+    "@fastify/swagger": "9.7.0",
+    "@scalar/fastify-api-reference": "1.55.3",
+    "fastify": "5.8.5",
+    "fastify-type-provider-zod": "6.1.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "pino": "catalog:"
+  }
+}

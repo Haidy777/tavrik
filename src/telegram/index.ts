@@ -1,13 +1,13 @@
-import { db, logger, migrateToLatest } from '@tavrik/lib'
-import { loadAndStoreAvailableModel } from '@tavrik/lib/provider'
+import { db, logger, migrateToLatest } from '@tavrik/core'
+import { loadAndStoreAvailableModel } from '@tavrik/core/provider'
 import { Bot, type Context } from 'grammy'
 import type { Selectable } from 'kysely'
 import {
   createConversation,
   handleChatMessage,
-} from '../lib/chat-handler/index.js'
-import type { ChatsConversations } from '../lib/database/generated.js'
-import { ENV_CONFIG } from '../lib/env.js'
+} from '../core/chat-handler/index.js'
+import type { ChatsConversations } from '../core/database/generated.js'
+import { ENV_CONFIG } from '../core/env.js'
 import { authMiddleware } from './auth.js'
 
 async function handleMessage(ctx: Context, _bot: Bot) {

@@ -1,6 +1,6 @@
-import { logger } from '@tavrik/lib'
+import { logger } from '@tavrik/core'
 import type { Context, NextFunction } from 'grammy'
-import { ENV_CONFIG } from '../lib/env.js'
+import { ENV_CONFIG } from '../core/env.js'
 
 export async function authMiddleware(ctx: Context, next: NextFunction) {
   const userId = ctx.from?.id

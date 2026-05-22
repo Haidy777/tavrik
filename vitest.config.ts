@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     passWithNoTests: true,
-    setupFiles: ['./src/lib/env.ts'],
+    setupFiles: ['./src/core/env.ts'],
     pool: 'forks',
     execArgv: ['--import', 'tsx/esm'],
     projects: [

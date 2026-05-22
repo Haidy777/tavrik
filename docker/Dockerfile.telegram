@@ -4,12 +4,14 @@ WORKDIR /app
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY src/lib/package.json src/lib/package.json
+COPY src/core/package.json src/core/package.json
 COPY src/telegram/package.json src/telegram/package.json
 COPY src/ui/package.json src/ui/package.json
+COPY src/api/package.json src/api/package.json
+COPY src/sdk/package.json src/sdk/package.json
 RUN pnpm install --frozen-lockfile
 
-COPY src/lib src/lib
+COPY src/core src/core
 COPY src/telegram src/telegram
 
 CMD ["pnpm", "tsx", "src/telegram/index.ts"]

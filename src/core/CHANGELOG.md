@@ -1,4 +1,4 @@
-# @tavrik/lib
+# @tavrik/core
 
 ## 0.6.0
 

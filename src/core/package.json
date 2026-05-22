@@ -1,5 +1,5 @@
 {
-  "name": "@tavrik/lib",
+  "name": "@tavrik/core",
   "type": "module",
   "version": "0.6.0",
   "license": "AGPL-3.0-or-later",
@@ -7,7 +7,9 @@
     ".": "./index.ts",
     "./database": "./database/index.ts",
     "./logger": "./logger.ts",
-    "./provider": "./provider/index.ts"
+    "./provider": "./provider/index.ts",
+    "./chat-handler": "./chat-handler/index.ts",
+    "./env": "./env.ts"
   },
   "scripts": {
     "db:codegen": "pnpm run db:migrate && kysely-codegen",

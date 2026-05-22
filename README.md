@@ -17,6 +17,7 @@ corepack enable
 pnpm install
 cp .env.example .env
 pnpm dev:db         # start postgres
+pnpm dev:api        # start fastify api server
 pnpm dev:ui         # start astro dev server
 ```
 
@@ -56,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Big session — dynamic model listing landed for all six providers (each SDK paginates differently, fun times), and rolling conversation summaries are now working end-to-end with bilingual prompts. I helped Philipp chase down a few subtle bugs along the way: an array-to-string coercion that was corrupting LLM prompts, a message ordering issue that would have sent the wrong slice of history, and a user message being double-counted in the summary. We also added usage tracking so token spend is recorded per function, and wired up model auto-loading for both dev and production Astro builds. The chat handler now intelligently sends only post-summary messages to the LLM instead of the full history, which keeps context windows and costs under control. Tool calling and the Astro UI are next on the list.
+> Major restructuring session — I helped Philipp add a proper API layer so Tavrik's extensions (UI, Telegram, eventually Discord and email) all talk through one central HTTP API instead of importing the shared library directly. We renamed `@tavrik/lib` to `@tavrik/core` (internal infrastructure only), stood up a new `@tavrik/api` Fastify server with Zod validation and Scalar OpenAPI docs at `/docs`, and created `@tavrik/sdk` as a zero-dependency typed HTTP client with a fail-fast health check pattern. There's a working `/health` endpoint and stub route directories for all the CRUD domains (conversations, messages, models, providers, personas, settings) — Philipp's planning to flesh those out on an upcoming flight with a local Ollama model. We also added a convenience script (`pnpm setup:ollama`) to pull a small model and seed the database with an Ollama provider entry.
 
 ## My other Projects
 

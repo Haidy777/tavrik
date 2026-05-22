@@ -1,0 +1,12 @@
+{
+  "name": "@tavrik/sdk",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

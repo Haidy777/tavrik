@@ -1,4 +1,4 @@
-import { loadAndStoreAvailableModel } from '../src/lib/provider'
+import { loadAndStoreAvailableModel } from '../src/core/provider'
 
 ;(async () => {
   await loadAndStoreAvailableModel()

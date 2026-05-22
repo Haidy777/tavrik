@@ -1,4 +1,4 @@
-import { migrateToLatest } from '@tavrik/lib/database'
+import { migrateToLatest } from '@tavrik/core/database'
 import type { AstroIntegration } from 'astro'
 
 export default function dbMigrate(): AstroIntegration {

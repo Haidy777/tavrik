@@ -16,7 +16,7 @@
       "!**/dist",
       "!**/node_modules",
       "!**/.astro",
-      "!src/lib/database/generated.ts"
+      "!src/core/database/generated.ts"
     ]
   },
   "formatter": {

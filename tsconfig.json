@@ -11,6 +11,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src/lib/**/*", "src/telegram/**/*"],
+  "include": ["src/core/**/*", "src/telegram/**/*", "src/api/**/*", "src/sdk/**/*"],
   "exclude": ["node_modules", "src/ui"]
 }
