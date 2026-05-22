@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 MODEL="${1:-qwen2.5:3b}"
 
 if ! command -v ollama &>/dev/null; then
@@ -12,7 +15,7 @@ echo "Pulling model: $MODEL"
 ollama pull "$MODEL"
 
 echo "Seeding Ollama provider into database..."
-pnpm tsx scripts/seed-ollama.ts
+pnpm --dir "$ROOT_DIR" tsx "$SCRIPT_DIR/seed-ollama.ts"
 
 echo ""
 echo "Done! Ollama provider registered with endpoint http://localhost:11434/v1"
