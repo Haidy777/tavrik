@@ -1,5 +1,6 @@
 import { TavrikApiError, TavrikConnectionError } from './errors.js'
-import type { HealthResponse } from './types.js'
+import type { NumericId } from './schemas.js'
+import type { ConversationResponse, HealthResponse } from './types.js'
 
 export interface TavrikClientOptions {
   baseUrl: string
@@ -25,6 +26,49 @@ export class TavrikClient {
 
   async health(): Promise<HealthResponse> {
     return this.request<HealthResponse>('GET', '/health')
+  }
+
+  get conversations() {
+    return {
+      getLatest: async (): Promise<ConversationResponse | null> => {
+        try {
+          return await this.request<ConversationResponse>(
+            'GET',
+            '/api/v1/conversations/latest'
+          )
+        } catch (err) {
+          if (err instanceof TavrikApiError && err.statusCode === 404) {
+            return null
+          }
+          throw err
+        }
+      },
+      create: async (
+        title?: string,
+        chatModelId?: NumericId,
+        personaId?: NumericId,
+        personaModifierId?: NumericId,
+        userProfileId?: NumericId,
+        rollingSummaryEnabled?: boolean,
+        rollingSummaryModelId?: NumericId,
+        ephemeral?: boolean
+      ): Promise<ConversationResponse> => {
+        return await this.request<ConversationResponse>(
+          'POST',
+          '/api/v1/conversations',
+          {
+            title,
+            chatModelId,
+            personaId,
+            personaModifierId,
+            userProfileId,
+            rollingSummaryEnabled,
+            rollingSummaryModelId,
+            ephemeral,
+          }
+        )
+      },
+    }
   }
 
   private async request<T>(

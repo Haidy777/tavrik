@@ -1,16 +1,13 @@
-import { db, logger, migrateToLatest } from '@tavrik/core'
+import { logger, migrateToLatest } from '@tavrik/core'
 import { loadAndStoreAvailableModel } from '@tavrik/core/provider'
+import { type ConversationResponse, TavrikClient } from '@tavrik/sdk'
 import { Bot, type Context } from 'grammy'
-import type { Selectable } from 'kysely'
-import {
-  createConversation,
-  handleChatMessage,
-} from '../core/chat-handler/index.js'
-import type { ChatsConversations } from '../core/database/generated.js'
+
+import { handleChatMessage } from '../core/chat-handler/index.js'
 import { ENV_CONFIG } from '../core/env.js'
 import { authMiddleware } from './auth.js'
 
-async function handleMessage(ctx: Context, _bot: Bot) {
+async function handleMessage(client: TavrikClient, ctx: Context, _bot: Bot) {
   await ctx.replyWithChatAction('typing')
 
   const message = ctx.message?.text || ''
@@ -20,18 +17,14 @@ async function handleMessage(ctx: Context, _bot: Bot) {
     return
   }
 
-  const latestConversation = await db
-    .selectFrom('chats.conversations')
-    .selectAll()
-    .orderBy('createdAt', 'desc')
-    .limit(1)
-    .executeTakeFirst()
-  let conversation: Selectable<ChatsConversations>
+  const latestConversation = await client.conversations.getLatest()
+
+  let conversation: ConversationResponse
 
   if (latestConversation) {
     conversation = latestConversation
   } else {
-    conversation = await createConversation()
+    conversation = await client.conversations.create()
   }
 
   const modelResponse = await handleChatMessage(conversation.id, message)
@@ -47,6 +40,12 @@ async function handleMessage(ctx: Context, _bot: Bot) {
   await migrateToLatest()
   await loadAndStoreAvailableModel()
 
+  // TODO maybe move the migration stuff to the api too? some form of inital request after new Client maybe?
+
+  const client = new TavrikClient({ baseUrl: 'localhost:3001' }) // todo make configurable via env
+
+  await client.connect()
+
   const bot = new Bot(ENV_CONFIG.TELEGRAM_BOT_TOKEN)
 
   bot.use(authMiddleware)
@@ -55,7 +54,7 @@ async function handleMessage(ctx: Context, _bot: Bot) {
     await ctx.reply('Welcome to Tavrik!')
   })
 
-  bot.on('message:text', async (ctx) => handleMessage(ctx, bot))
+  bot.on('message:text', async (ctx) => handleMessage(client, ctx, bot))
 
   await bot.start({
     onStart: (botInfo) => {

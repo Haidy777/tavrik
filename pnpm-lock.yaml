@@ -65,6 +65,9 @@ importers:
       '@tavrik/core':
         specifier: workspace:*
         version: link:../core
+      '@tavrik/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       fastify:
         specifier: 5.8.5
         version: 5.8.5
@@ -126,6 +129,10 @@ importers:
         version: 0.20.0(kysely@0.29.2)(pg@8.21.0)(typescript@6.0.3)
 
   src/sdk:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -136,6 +143,9 @@ importers:
       '@tavrik/core':
         specifier: workspace:*
         version: link:../core
+      '@tavrik/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       grammy:
         specifier: 1.43.0
         version: 1.43.0

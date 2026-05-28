@@ -1,12 +1,6 @@
 import { db } from '@tavrik/core/database'
-import { z } from 'zod'
+import { healthResponseSchema } from '@tavrik/sdk/schemas'
 import type { AppInstance } from '../types.js'
-
-const healthResponseSchema = z.object({
-  status: z.enum(['ok', 'degraded', 'error']),
-  timestamp: z.string(),
-  database: z.boolean(),
-})
 
 export async function healthRoutes(app: AppInstance) {
   app.get(

@@ -1,77 +1,24 @@
 import type { ChatsConversations, DB } from '@tavrik/core/database'
-import { db } from '@tavrik/core/database'
+import { db, getSetting } from '@tavrik/core/database'
+import type {
+  ConversationListQuerystring,
+  ConversationParams,
+  CreateConversationBody,
+  UpdateConversationBody,
+} from '@tavrik/sdk/schemas'
+import {
+  conversationListQuerystringSchema,
+  conversationListResponseSchema,
+  conversationParamsSchema,
+  conversationResponseSchema,
+  createConversationBodySchema,
+  errorResponseSchema,
+  updateConversationBodySchema,
+} from '@tavrik/sdk/schemas'
 import type { Selectable, UpdateObject } from 'kysely'
 import { z } from 'zod'
 import type { AppInstance } from '../../types.js'
 import { conversationMessageRoutes } from './[conversationId]/messages/index.js'
-
-// ---------------------------------------------------------------------------
-// Shared helpers
-// ---------------------------------------------------------------------------
-
-const numericId = z.string().regex(/^\d+$/, 'must be a numeric ID')
-
-// ---------------------------------------------------------------------------
-// Schemas
-// ---------------------------------------------------------------------------
-
-const conversationResponse = z.object({
-  id: z.string(),
-  title: z.string(),
-  archived: z.boolean(),
-  ephemeral: z.boolean(),
-  chatModelId: z.string(),
-  personaId: z.string().nullable(),
-  personaModifierId: z.string().nullable(),
-  userProfileId: z.string().nullable(),
-  rollingSummaryEnabled: z.boolean(),
-  rollingSummaryModelId: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
-
-const conversationListResponse = z.object({
-  data: z.array(conversationResponse),
-  total: z.number(),
-})
-
-const createConversationBody = z.object({
-  title: z.string().min(1).max(255),
-  chatModelId: numericId,
-  personaId: numericId.nullable().optional(),
-  personaModifierId: numericId.nullable().optional(),
-  userProfileId: numericId.nullable().optional(),
-  rollingSummaryEnabled: z.boolean().optional(),
-  rollingSummaryModelId: numericId.nullable().optional(),
-  ephemeral: z.boolean().optional(),
-})
-
-const updateConversationBody = z.object({
-  title: z.string().min(1).max(255).optional(),
-  archived: z.boolean().optional(),
-  chatModelId: numericId.optional(),
-  personaId: numericId.nullable().optional(),
-  personaModifierId: numericId.nullable().optional(),
-  userProfileId: numericId.nullable().optional(),
-  rollingSummaryEnabled: z.boolean().optional(),
-  rollingSummaryModelId: numericId.nullable().optional(),
-})
-
-const conversationParams = z.object({
-  conversationId: numericId,
-})
-
-const listQuerystring = z.object({
-  archived: z.enum(['true', 'false']).optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
-  offset: z.coerce.number().int().min(0).optional().default(0),
-})
-
-const errorResponse = z.object({
-  error: z.string(),
-  message: z.string(),
-  statusCode: z.number(),
-})
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -110,15 +57,14 @@ export async function conversationRoutes(app: AppInstance) {
     '/',
     {
       schema: {
-        querystring: listQuerystring,
-        response: { 200: conversationListResponse },
+        querystring: conversationListQuerystringSchema,
+        response: { 200: conversationListResponseSchema },
         tags: ['Conversations'],
       },
     },
     async (request) => {
-      const { archived, limit, offset } = request.query as z.infer<
-        typeof listQuerystring
-      >
+      const { archived, limit, offset } =
+        request.query as ConversationListQuerystring
 
       let baseQuery = db.selectFrom('chats.conversations')
 
@@ -145,23 +91,51 @@ export async function conversationRoutes(app: AppInstance) {
     }
   )
 
+  app.get(
+    '/latest',
+    {
+      schema: {
+        response: {
+          200: conversationResponseSchema,
+          404: errorResponseSchema,
+        },
+        tags: ['Conversations'],
+      },
+    },
+    async (_request, reply) => {
+      const latestConversation = await db
+        .selectFrom('chats.conversations')
+        .selectAll()
+        .orderBy('createdAt', 'desc')
+        .limit(1)
+        .executeTakeFirst()
+
+      if (!latestConversation) {
+        return reply.status(404).send({
+          error: 'Not Found',
+          message: 'No conversations found',
+        })
+      }
+
+      return reply.status(200).send(formatConversation(latestConversation))
+    }
+  )
+
   // GET ONE — GET /api/v1/conversations/:conversationId
   app.get(
     '/:conversationId',
     {
       schema: {
-        params: conversationParams,
+        params: conversationParamsSchema,
         response: {
-          200: conversationResponse,
-          404: errorResponse,
+          200: conversationResponseSchema,
+          404: errorResponseSchema,
         },
         tags: ['Conversations'],
       },
     },
     async (request, reply) => {
-      const { conversationId } = request.params as z.infer<
-        typeof conversationParams
-      >
+      const { conversationId } = request.params as ConversationParams
 
       const row = await db
         .selectFrom('chats.conversations')
@@ -186,26 +160,64 @@ export async function conversationRoutes(app: AppInstance) {
     '/',
     {
       schema: {
-        body: createConversationBody,
+        body: createConversationBodySchema,
         response: {
-          201: conversationResponse,
+          201: conversationResponseSchema,
+          400: errorResponseSchema,
         },
         tags: ['Conversations'],
       },
     },
     async (request, reply) => {
-      const body = request.body as z.infer<typeof createConversationBody>
+      const body = request.body as CreateConversationBody
+
+      const usedChatModelId =
+        body.chatModelId ??
+        String((await getSetting('default_chat_model_id'))?.id ?? '')
+
+      if (!usedChatModelId) {
+        return reply.status(400).send({
+          error: 'Bad Request',
+          message:
+            'No chatModelId provided and no default chat model configured',
+          statusCode: 400,
+        })
+      }
+
+      const usedRollingSummaryModelId =
+        (body.rollingSummaryModelId ??
+          String(
+            (await getSetting('default_rolling_summary_model_id'))?.id ?? ''
+          )) ||
+        null
+
+      const usedPersonaId =
+        (body.personaId ??
+          String((await getSetting('default_persona_id'))?.id ?? '')) ||
+        null
+
+      const usedPersonaModifierId =
+        (body.personaModifierId ??
+          String(
+            (await getSetting('default_persona_modifier_id'))?.id ?? ''
+          )) ||
+        null
+
+      const usedUserProfileId =
+        (body.userProfileId ??
+          String((await getSetting('default_user_profile_id'))?.id ?? '')) ||
+        null
 
       const row = await db
         .insertInto('chats.conversations')
         .values({
-          title: body.title,
-          chatModelId: body.chatModelId,
-          personaId: body.personaId ?? null,
-          personaModifierId: body.personaModifierId ?? null,
-          userProfileId: body.userProfileId ?? null,
+          title: body.title ?? new Date().toISOString(),
+          chatModelId: usedChatModelId,
+          personaId: usedPersonaId,
+          personaModifierId: usedPersonaModifierId,
+          userProfileId: usedUserProfileId,
           rollingSummaryEnabled: body.rollingSummaryEnabled ?? true,
-          rollingSummaryModelId: body.rollingSummaryModelId ?? null,
+          rollingSummaryModelId: usedRollingSummaryModelId,
           ephemeral: body.ephemeral ?? false,
         })
         .returningAll()
@@ -220,21 +232,19 @@ export async function conversationRoutes(app: AppInstance) {
     '/:conversationId',
     {
       schema: {
-        params: conversationParams,
-        body: updateConversationBody,
+        params: conversationParamsSchema,
+        body: updateConversationBodySchema,
         response: {
-          200: conversationResponse,
-          400: errorResponse,
-          404: errorResponse,
+          200: conversationResponseSchema,
+          400: errorResponseSchema,
+          404: errorResponseSchema,
         },
         tags: ['Conversations'],
       },
     },
     async (request, reply) => {
-      const { conversationId } = request.params as z.infer<
-        typeof conversationParams
-      >
-      const body = request.body as z.infer<typeof updateConversationBody>
+      const { conversationId } = request.params as ConversationParams
+      const body = request.body as UpdateConversationBody
 
       const update: UpdateObject<DB, 'chats.conversations'> = {}
       if (body.title !== undefined) update.title = body.title
@@ -283,18 +293,16 @@ export async function conversationRoutes(app: AppInstance) {
     '/:conversationId',
     {
       schema: {
-        params: conversationParams,
+        params: conversationParamsSchema,
         response: {
           204: z.null(),
-          404: errorResponse,
+          404: errorResponseSchema,
         },
         tags: ['Conversations'],
       },
     },
     async (request, reply) => {
-      const { conversationId } = request.params as z.infer<
-        typeof conversationParams
-      >
+      const { conversationId } = request.params as ConversationParams
 
       const result = await db
         .deleteFrom('chats.conversations')

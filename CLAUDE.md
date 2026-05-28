@@ -13,13 +13,13 @@ An opinionated chat bot interface with tool calling, model selections, and promp
   - `provider/` — LLM provider abstraction (base, openai, anthropic, google, openrouter, openai-compatible, mistral)
   - `chat-handler/` — Conversation management, system prompt composition, rolling summaries
   - `consts/` — Provider model definitions and seed data
-- `src/sdk/` — Typed HTTP client (`@tavrik/sdk`) — zero-dep client for consuming the API
+- `src/sdk/` — Typed HTTP client (`@tavrik/sdk`) — API contract owner (Zod schemas + inferred types) and typed client for consuming the API
 - `src/ui/` — Astro frontend (`@tavrik/ui`)
 - `src/telegram/` — Telegram bot
 - `docker/` — Dockerfiles and compose configs
 - `scripts/` — Development utility scripts
 
-Extensions (UI, Telegram, future Discord/Email) integrate through the API via HTTP. Only `@tavrik/api` imports `@tavrik/core` directly.
+Extensions (UI, Telegram, future Discord/Email) integrate through the API via the SDK (`@tavrik/sdk`). Only `@tavrik/api` imports `@tavrik/core` directly. `@tavrik/api` also imports `@tavrik/sdk/schemas` for shared Zod schemas.
 
 This is a pnpm workspace monorepo. Each package in `src/` has its own `package.json`.
 
@@ -57,7 +57,8 @@ pnpm dev:ui        # start astro dev server
 - **Database**: always use Kysely — raw SQL only via `sql` template tag for DDL (schemas, triggers, comments, custom types)
 - **Database types**: use `Kysely<Record<string, never>>` in migrations (not `any`), `Selectable<>` for unwrapping query results
 - **Database schemas**: each domain gets its own Postgres schema (provider, personas, chats, system); codegen uses `--default-schema public` with `--include-pattern *.*` for prefixed types
-- **API routes**: use `AppInstance` type from `src/api/types.ts`, Zod schemas for request/response validation, route prefix `/api/v1/`
+- **API schemas**: Zod schemas live in `@tavrik/sdk/schemas` (single source of truth); API routes import from there, never define schemas inline
+- **API routes**: use `AppInstance` type from `src/api/types.ts`, route prefix `/api/v1/`
 - **Tests**: write tests when they add value, not for every change; database tests use `.test.database.ts`, unit tests use `.test.unit.ts`
 - **Workflow**: working on main branch directly (solo dev for now)
 

@@ -1,5 +1,6 @@
 import fastifySwagger from '@fastify/swagger'
 import scalarReference from '@scalar/fastify-api-reference'
+import { jsonSchemaTransform } from 'fastify-type-provider-zod'
 import type { AppInstance } from '../types.js'
 
 export async function registerSwagger(app: AppInstance) {
@@ -11,6 +12,7 @@ export async function registerSwagger(app: AppInstance) {
         description: 'Tavrik chat bot API',
       },
     },
+    transform: jsonSchemaTransform,
   })
 
   await app.register(scalarReference, {

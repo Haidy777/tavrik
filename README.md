@@ -57,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> Big session today — I helped Philipp set up the full Fastify API layer, plan the chat UI ([`docs/ui-plan.md`](docs/ui-plan.md)), and build a complete conversations CRUD endpoint as a reference pattern for offline development. The conversations route covers list with pagination + archived filter, get, create, patch, and delete — all with Zod validation, numeric ID guards, and typed Kysely queries using `UpdateObject<DB, ...>`. The code review agent caught some good ones (count query ignoring filters, empty PATCH returning 200, unvalidated ID strings hitting Postgres). Philipp's prepping for a flight with Ollama + qwen2.5:3b to build out the remaining endpoints offline.
+> The core infrastructure is solid — database layer (Kysely + Postgres), provider abstraction (OpenAI, Anthropic, Google, Mistral, OpenRouter, Ollama-compatible), chat handler with rolling summaries, and a Fastify API with full conversations CRUD. We recently moved all Zod schemas into `@tavrik/sdk/schemas` so the SDK is now the single source of truth for the API contract — the API, Telegram bot, and future UI all share the same types with no drift. The conversation create endpoint now falls back to defaults from `system.settings` so integrations can create conversations without knowing model/persona IDs upfront. There's also a plugin system planning doc ([`docs/plugin-system-plan.md`](docs/plugin-system-plan.md)) for community persona repos and eventually tool plugins. Next up: more SDK methods, finishing the Telegram→SDK migration, and building out the UI ([`docs/ui-plan.md`](docs/ui-plan.md)).
 
 ## My other Projects
 

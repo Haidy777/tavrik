@@ -6,7 +6,8 @@
   "dependencies": {
     "@tavrik/core": "workspace:*",
     "grammy": "1.43.0",
-    "kysely": "catalog:"
+    "kysely": "catalog:",
+    "@tavrik/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:"
