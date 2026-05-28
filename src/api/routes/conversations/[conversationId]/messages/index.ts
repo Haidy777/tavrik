@@ -1,4 +1,5 @@
 import { db } from '@tavrik/core'
+import { ENV_CONFIG } from '@tavrik/core/env'
 import { sendMessage } from '@tavrik/core/provider'
 import { autoSummarize } from '@tavrik/core/summarize'
 import {
@@ -29,6 +30,8 @@ export async function conversationMessageRoutes(app: AppInstance) {
       const { conversationId } = request.params as ConversationParams
       const body = request.body as ConversationMessageBody
 
+      request.log.info('Received new message')
+
       const conversation = await db
         .selectFrom('chats.conversations')
         .selectAll()
@@ -45,6 +48,11 @@ export async function conversationMessageRoutes(app: AppInstance) {
           .where('id', '=', conversation.personaId)
           .executeTakeFirstOrThrow()
 
+        request.log.debug(
+          { personaId: conversation.personaId },
+          `Retrieved persona ${persona.name}`
+        )
+
         systemPrompt += persona.systemPrompt
       }
 
@@ -54,6 +62,11 @@ export async function conversationMessageRoutes(app: AppInstance) {
           .select(['name', 'systemPromptModifier'])
           .where('id', '=', conversation.personaModifierId)
           .executeTakeFirstOrThrow()
+
+        request.log.debug(
+          { personaModifierId: conversation.personaModifierId },
+          `Retrieved persona modifier ${personaModifier.name}`
+        )
 
         systemPrompt += `\n\n${personaModifier.systemPromptModifier}`
       }
@@ -66,6 +79,11 @@ export async function conversationMessageRoutes(app: AppInstance) {
           .selectAll()
           .where('id', '=', conversation.userProfileId)
           .executeTakeFirstOrThrow()
+
+        request.log.debug(
+          { userProfileId: conversation.userProfileId },
+          `Retrieved user profile ${userProfile.name}`
+        )
 
         systemPrompt += `\n\n${userProfile.profile}`
       }
@@ -105,10 +123,22 @@ export async function conversationMessageRoutes(app: AppInstance) {
         { role: 'user' as const, content: body.message },
       ]
 
+      if (ENV_CONFIG.DEBUG_LOG_FULL_PROMPTS) {
+        request.log.debug({ systemPrompt }, 'Full system prompt')
+      }
+
       const response = await sendMessage(
         conversation.chatModelId,
         systemPrompt,
         messagesToSend
+      )
+
+      request.log.info(
+        {
+          inputTokens: response.inputTokens,
+          outputTokens: response.outputTokens,
+        },
+        'LLM response received'
       )
 
       await db

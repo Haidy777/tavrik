@@ -5,6 +5,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { registerErrorHandler } from './plugins/error-handler.js'
+import { registerRequestLogger } from './plugins/request-logger.js'
 import { registerSwagger } from './plugins/swagger.js'
 import { conversationRoutes } from './routes/conversations/index.js'
 import { healthRoutes } from './routes/health.js'
@@ -24,6 +25,7 @@ export async function buildApp() {
 
   await registerSwagger(app)
   registerErrorHandler(app)
+  registerRequestLogger(app)
 
   await app.register(healthRoutes)
   await app.register(indexRoutes)
