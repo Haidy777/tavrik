@@ -243,6 +243,8 @@ export async function conversationRoutes(app: AppInstance) {
       },
     },
     async (request, reply) => {
+      // todo not always set defaults only if set defaults = true (new param later)
+
       const { conversationId } = request.params as ConversationParams
       const body = request.body as UpdateConversationBody
 

@@ -6,12 +6,12 @@ An opinionated chat bot interface with tool calling, model selections, and promp
 
 - `src/api/` — Fastify API server (`@tavrik/api`) — central HTTP API with Zod validation and OpenAPI docs
   - `plugins/` — Fastify plugins (swagger/Scalar docs, error handler)
-  - `routes/` — Route modules by domain (health, conversations, messages, models, providers, personas, settings)
+  - `routes/` — Route modules by domain (health, init, conversations + messages, models, providers, personas, settings); conversation/message routes contain chat logic (prompt composition, summarization, LLM calls)
   - `types.ts` — Shared `AppInstance` type (Fastify with Pino logger)
-- `src/core/` — Core infrastructure (`@tavrik/core`) — database (Kysely), logger (Pino), provider layer, chat handler
-  - `database/` — Kysely setup, migrations, helpers, generated types, overrides
+- `src/core/` — Core infrastructure (`@tavrik/core`) — database (Kysely), logger (Pino), provider layer, shared utilities
+  - `database/` — Kysely setup, migrations, helpers, generated types, overrides, settings
   - `provider/` — LLM provider abstraction (base, openai, anthropic, google, openrouter, openai-compatible, mistral)
-  - `chat-handler/` — Conversation management, system prompt composition, rolling summaries
+  - `summarize/` — Auto-summarize (rolling conversation summaries)
   - `consts/` — Provider model definitions and seed data
 - `src/sdk/` — Typed HTTP client (`@tavrik/sdk`) — API contract owner (Zod schemas + inferred types) and typed client for consuming the API
 - `src/ui/` — Astro frontend (`@tavrik/ui`)

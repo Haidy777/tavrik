@@ -8,7 +8,7 @@
     "./database": "./database/index.ts",
     "./logger": "./logger.ts",
     "./provider": "./provider/index.ts",
-    "./chat-handler": "./chat-handler/index.ts",
+    "./summarize": "./summarize/index.ts",
     "./env": "./env.ts"
   },
   "scripts": {

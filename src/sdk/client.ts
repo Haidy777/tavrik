@@ -1,5 +1,9 @@
 import { TavrikApiError, TavrikConnectionError } from './errors.js'
-import type { NumericId } from './schemas.js'
+import type {
+  ConversationMessageResponse,
+  MessageSource,
+  NumericId,
+} from './schemas.js'
 import type { ConversationResponse, HealthResponse } from './types.js'
 
 export interface TavrikClientOptions {
@@ -13,7 +17,7 @@ export class TavrikClient {
 
   constructor(options: TavrikClientOptions) {
     this.baseUrl = options.baseUrl.replace(/\/$/, '')
-    this.timeout = options.timeout ?? 5000
+    this.timeout = options.timeout ?? 30_000
   }
 
   async connect(): Promise<HealthResponse> {
@@ -21,6 +25,9 @@ export class TavrikClient {
     if (health.status !== 'ok') {
       throw new TavrikConnectionError(`API reports ${health.status} status`)
     }
+
+    await this.init()
+
     return health
   }
 
@@ -68,11 +75,24 @@ export class TavrikClient {
           }
         )
       },
+
+      messages: (conversationId: string) => ({
+        send: async (
+          message: string,
+          source: MessageSource
+        ): Promise<ConversationMessageResponse> => {
+          return await this.request<ConversationMessageResponse>(
+            'POST',
+            `/api/v1/conversations/${conversationId}/messages`,
+            { message, source }
+          )
+        },
+      }),
     }
   }
 
   private async request<T>(
-    method: string,
+    method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE',
     path: string,
     body?: unknown
   ): Promise<T> {
@@ -102,5 +122,9 @@ export class TavrikClient {
     } finally {
       clearTimeout(timer)
     }
+  }
+
+  private async init() {
+    await this.request('POST', '/init')
   }
 }

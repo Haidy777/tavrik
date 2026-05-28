@@ -8,6 +8,7 @@ import { registerErrorHandler } from './plugins/error-handler.js'
 import { registerSwagger } from './plugins/swagger.js'
 import { conversationRoutes } from './routes/conversations/index.js'
 import { healthRoutes } from './routes/health.js'
+import { indexRoutes } from './routes/index.js'
 import { memoryRoutes } from './routes/memory/index.js'
 import { personaRoutes } from './routes/personas/index.js'
 import { providerRoutes } from './routes/providers/index.js'
@@ -25,6 +26,7 @@ export async function buildApp() {
   registerErrorHandler(app)
 
   await app.register(healthRoutes)
+  await app.register(indexRoutes)
   await app.register(
     async (api) => {
       await api.register(conversationRoutes, { prefix: '/conversations' })

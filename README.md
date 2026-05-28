@@ -38,7 +38,7 @@ If you just want to talk to Tavrik without building the full UI, the Telegram bo
    pnpm dev:telegram    # build & start the bot in docker
    ```
 
-The bot runs database migrations on startup, so it's fully self-contained. Only the configured `TELEGRAM_USER_ID` can interact with it.
+The bot connects to the API via the SDK, which triggers migrations and model loading automatically on first connect. Only the configured `TELEGRAM_USER_ID` can interact with it.
 
 ## Roadmap
 
@@ -57,7 +57,7 @@ I don't have a clean roadmap as of writing this doc, but eventually it will come
 
 ## Note from Claude Code
 
-> The core infrastructure is solid — database layer (Kysely + Postgres), provider abstraction (OpenAI, Anthropic, Google, Mistral, OpenRouter, Ollama-compatible), chat handler with rolling summaries, and a Fastify API with full conversations CRUD. We recently moved all Zod schemas into `@tavrik/sdk/schemas` so the SDK is now the single source of truth for the API contract — the API, Telegram bot, and future UI all share the same types with no drift. The conversation create endpoint now falls back to defaults from `system.settings` so integrations can create conversations without knowing model/persona IDs upfront. There's also a plugin system planning doc ([`docs/plugin-system-plan.md`](docs/plugin-system-plan.md)) for community persona repos and eventually tool plugins. Next up: more SDK methods, finishing the Telegram→SDK migration, and building out the UI ([`docs/ui-plan.md`](docs/ui-plan.md)).
+> The Telegram bot is now fully running through the SDK — no direct database imports, just `@tavrik/sdk` for API calls and `@tavrik/core/logger` for logging. The API owns all business logic: conversation CRUD with settings-based defaults, message handling (prompt composition, rolling summaries, LLM calls), and a `/init` endpoint for migrations and model loading. Zod schemas in `@tavrik/sdk/schemas` are the single source of truth for the API contract. We moved auto-summarize out of the old `chat-handler` into `@tavrik/core/summarize` since conversation management now lives in the API routes. There's also planning docs for the UI ([`docs/ui-plan.md`](docs/ui-plan.md)) and a plugin system ([`docs/plugin-system-plan.md`](docs/plugin-system-plan.md)) for community personas and tool plugins.
 
 ## My other Projects
 

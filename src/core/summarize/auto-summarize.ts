@@ -7,7 +7,7 @@ import { trackUsage } from '../database/usage-tracking/index.js'
 import { moduleLogger } from '../logger.js'
 import { sendMessage } from '../provider/index.js'
 
-const logger = moduleLogger('chatHandler/auto-summarize')
+const logger = moduleLogger('summarize/auto-summarize')
 
 // todo make configurable
 const SUMMARY_PROMPTS: {

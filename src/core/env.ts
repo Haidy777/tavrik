@@ -22,4 +22,6 @@ export const ENV_CONFIG = {
 
   API_PORT: Number(process.env.API_PORT || 3001),
   API_HOST: process.env.API_HOST || '0.0.0.0',
+
+  API_URL: process.env.API_URL || 'http://localhost:3001',
 }

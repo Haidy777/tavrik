@@ -21,6 +21,16 @@ export const healthResponseSchema = z.object({
 export type HealthResponse = z.infer<typeof healthResponseSchema>
 
 // ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+
+export const initResponseSchema = z.object({
+  initialized: z.boolean(),
+})
+
+export type InitResponse = z.infer<typeof initResponseSchema>
+
+// ---------------------------------------------------------------------------
 // Conversations
 // ---------------------------------------------------------------------------
 
@@ -94,6 +104,26 @@ export const conversationListQuerystringSchema = z.object({
 
 export type ConversationListQuerystring = z.infer<
   typeof conversationListQuerystringSchema
+>
+
+export const messageSources = ['web', 'telegram'] as const
+export type MessageSource = (typeof messageSources)[number]
+
+export const conversationMessageBodySchema = z.object({
+  message: z.string().min(1),
+  source: z.enum(messageSources),
+})
+
+export type ConversationMessageBody = z.infer<
+  typeof conversationMessageBodySchema
+>
+
+export const conversationMessageResponseSchema = z.object({
+  modelResponse: z.string(),
+})
+
+export type ConversationMessageResponse = z.infer<
+  typeof conversationMessageResponseSchema
 >
 
 // ---------------------------------------------------------------------------

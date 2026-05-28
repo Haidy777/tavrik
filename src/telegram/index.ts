@@ -1,9 +1,7 @@
-import { logger, migrateToLatest } from '@tavrik/core'
-import { loadAndStoreAvailableModel } from '@tavrik/core/provider'
+import { logger } from '@tavrik/core'
 import { type ConversationResponse, TavrikClient } from '@tavrik/sdk'
 import { Bot, type Context } from 'grammy'
 
-import { handleChatMessage } from '../core/chat-handler/index.js'
 import { ENV_CONFIG } from '../core/env.js'
 import { authMiddleware } from './auth.js'
 
@@ -27,9 +25,13 @@ async function handleMessage(client: TavrikClient, ctx: Context, _bot: Bot) {
     conversation = await client.conversations.create()
   }
 
-  const modelResponse = await handleChatMessage(conversation.id, message)
+  const modelResponse = await client.conversations
+    .messages(conversation.id)
+    .send(message, 'telegram')
 
-  await ctx.reply(modelResponse || 'Sorry, I could not understand that.')
+  await ctx.reply(
+    modelResponse.modelResponse || 'Sorry, I could not understand that.'
+  )
 }
 
 ;(async () => {
@@ -37,12 +39,7 @@ async function handleMessage(client: TavrikClient, ctx: Context, _bot: Bot) {
     throw new Error('TELEGRAM_BOT_TOKEN is not set')
   }
 
-  await migrateToLatest()
-  await loadAndStoreAvailableModel()
-
-  // TODO maybe move the migration stuff to the api too? some form of inital request after new Client maybe?
-
-  const client = new TavrikClient({ baseUrl: 'localhost:3001' }) // todo make configurable via env
+  const client = new TavrikClient({ baseUrl: ENV_CONFIG.API_URL })
 
   await client.connect()
 
