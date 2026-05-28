@@ -1,5 +1,13 @@
 # @tavrik/telegram
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [95a5fba]
+  - @tavrik/sdk@0.2.0
+  - @tavrik/core@1.1.0
+
 ## 0.1.7
 
 ### Patch Changes
