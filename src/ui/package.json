@@ -10,12 +10,12 @@
     "check": "astro check"
   },
   "dependencies": {
-    "@astrojs/node": "10.1.1",
+    "@astrojs/node": "10.1.4",
     "@tavrik/core": "workspace:*",
-    "astro": "6.3.8"
+    "astro": "6.4.8"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.9",
+    "@astrojs/check": "0.9.10",
     "typescript": "catalog:"
   }
 }
