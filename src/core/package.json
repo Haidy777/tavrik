@@ -19,7 +19,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "0.99.0",
     "@google/genai": "2.6.0",
-    "@mistralai/mistralai": "2.2.1",
+    "@mistralai/mistralai": "2.6.4",
     "@openrouter/sdk": "0.12.35",
     "dotenv": "17.4.2",
     "kysely": "catalog:",
