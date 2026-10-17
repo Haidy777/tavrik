@@ -23,7 +23,7 @@ catalogs:
       version: 13.1.3
     typescript:
       specifier: 6.0.3
-      version: 5.9.3
+      version: 6.0.3
     zod:
       specifier: 4.4.3
       version: 4.4.3
@@ -52,7 +52,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: 4.1.7
-        version: 4.1.7(@types/node@24.12.4)(vite@8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3))
+        version: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(vite@8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3))
 
   src/api:
     dependencies:
@@ -91,8 +91,8 @@ importers:
   src/core:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: 0.99.0
-        version: 0.99.0(zod@4.4.3)
+        specifier: 0.135.0
+        version: 0.135.0(zod@4.4.3)
       '@google/genai':
         specifier: 2.6.0
         version: 2.6.0
@@ -171,15 +171,15 @@ importers:
     devDependencies:
       '@astrojs/check':
         specifier: 0.9.9
-        version: 0.9.9(prettier@3.8.3)(typescript@5.9.3)
+        version: 0.9.9(prettier@3.8.3)(typescript@6.0.3)
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
 packages:
 
-  '@anthropic-ai/sdk@0.99.0':
-    resolution: {integrity: sha512-vdicFA9YjtvgpG8rxp39hqW4oxpkdRGPTq0QEts5TZhr2GkLozDduK/GiXrLQ7PzrKYBtIkQFdRW+QBjzlsABg==}
+  '@anthropic-ai/sdk@0.135.0':
+    resolution: {integrity: sha512-WWrdL57JhU5KoynpTjt9GXK6k7ud9nPw2uw/Trn+oBXh6s0KpjhAccWZm2Qxw08ARYG1UDQj5iC+JO42j1rt/g==}
     hasBin: true
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -949,6 +949,10 @@ packages:
 
   '@openrouter/sdk@0.12.35':
     resolution: {integrity: sha512-s4QVLLnG1AmfW3TjnnHUqGfsCkzwVK+kboGcZmKbde09m1DPqgzl4RUFt/HJ5v97MX8aEaN0UG3mKv2S+qj2Gw==}
+
+  '@opentelemetry/api@1.9.1':
+    resolution: {integrity: sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q==}
+    engines: {node: '>=8.0.0'}
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
@@ -3103,11 +3107,6 @@ packages:
   typescript-auto-import-cache@0.3.6:
     resolution: {integrity: sha512-RpuHXrknHdVdK7wv/8ug3Fr0WNsNi5l5aB8MYYuXhq2UH5lnEB1htJ1smhtD5VeCsGr2p8mUDtd83LCQDFVgjQ==}
 
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@6.0.3:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
@@ -3557,19 +3556,20 @@ packages:
 
 snapshots:
 
-  '@anthropic-ai/sdk@0.99.0(zod@4.4.3)':
+  '@anthropic-ai/sdk@0.135.0(zod@4.4.3)':
     dependencies:
+      '@opentelemetry/api': 1.9.1
       json-schema-to-ts: 3.1.1
       standardwebhooks: 1.0.0
     optionalDependencies:
       zod: 4.4.3
 
-  '@astrojs/check@0.9.9(prettier@3.8.3)(typescript@5.9.3)':
+  '@astrojs/check@0.9.9(prettier@3.8.3)(typescript@6.0.3)':
     dependencies:
-      '@astrojs/language-server': 2.16.10(prettier@3.8.3)(typescript@5.9.3)
+      '@astrojs/language-server': 2.16.10(prettier@3.8.3)(typescript@6.0.3)
       chokidar: 4.0.3
       kleur: 4.1.5
-      typescript: 5.9.3
+      typescript: 6.0.3
       yargs: 17.7.2
     transitivePeerDependencies:
       - prettier
@@ -3583,12 +3583,12 @@ snapshots:
     dependencies:
       picomatch: 4.0.4
 
-  '@astrojs/language-server@2.16.10(prettier@3.8.3)(typescript@5.9.3)':
+  '@astrojs/language-server@2.16.10(prettier@3.8.3)(typescript@6.0.3)':
     dependencies:
       '@astrojs/compiler': 2.13.1
       '@astrojs/yaml2ts': 0.2.4
       '@jridgewell/sourcemap-codec': 1.5.5
-      '@volar/kit': 2.4.28(typescript@5.9.3)
+      '@volar/kit': 2.4.28(typescript@6.0.3)
       '@volar/language-core': 2.4.28
       '@volar/language-server': 2.4.28
       '@volar/language-service': 2.4.28
@@ -4269,6 +4269,8 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
+  '@opentelemetry/api@1.9.1': {}
+
   '@oslojs/encoding@1.1.0': {}
 
   '@oxc-project/types@0.124.0': {}
@@ -4617,12 +4619,12 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@volar/kit@2.4.28(typescript@5.9.3)':
+  '@volar/kit@2.4.28(typescript@6.0.3)':
     dependencies:
       '@volar/language-service': 2.4.28
       '@volar/typescript': 2.4.28
       typesafe-path: 0.2.2
-      typescript: 5.9.3
+      typescript: 6.0.3
       vscode-languageserver-textdocument: 1.0.12
       vscode-uri: 3.1.0
 
@@ -6687,8 +6689,6 @@ snapshots:
     dependencies:
       semver: 7.7.4
 
-  typescript@5.9.3: {}
-
   typescript@6.0.3: {}
 
   ufo@1.6.3: {}
@@ -6818,7 +6818,7 @@ snapshots:
     optionalDependencies:
       vite: 7.3.2(@types/node@24.12.4)(lightningcss@1.32.0)(tsx@4.22.3)(yaml@2.8.3)
 
-  vitest@4.1.7(@types/node@24.12.4)(vite@8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3)):
+  vitest@4.1.7(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(vite@8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3)):
     dependencies:
       '@vitest/expect': 4.1.7
       '@vitest/mocker': 4.1.7(vite@8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3))
@@ -6841,6 +6841,7 @@ snapshots:
       vite: 8.0.8(@types/node@24.12.4)(esbuild@0.28.0)(tsx@4.22.3)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
+      '@opentelemetry/api': 1.9.1
       '@types/node': 24.12.4
     transitivePeerDependencies:
       - msw
