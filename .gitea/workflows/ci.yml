@@ -30,10 +30,10 @@ jobs:
       DATABASE_URL: postgres://tavrik:tavrik@postgres:5432/tavrik_test
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.1.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.5.0
         with:
           node-version-file: 'package.json'
 
@@ -66,7 +66,7 @@ jobs:
         run: apk add --no-cache docker-cli git
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.1.0
 
       - name: Build app image
         run: docker build -f docker/Dockerfile -t tavrik:smoke .
@@ -92,7 +92,7 @@ jobs:
         run: apk add --no-cache git || (apt-get update && apt-get install -y git) || true
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.1.0
         with:
           fetch-depth: 0
 
@@ -105,7 +105,7 @@ jobs:
 
       - name: Setup Node.js
         if: steps.check.outputs.count != '0'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.5.0
         with:
           node-version-file: 'package.json'
 
